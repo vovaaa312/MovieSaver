@@ -1,4 +1,5 @@
-﻿using MovieSaver.Controller;
+﻿using Medias.Forms;
+using MovieSaver.Controller;
 using MovieSaver.Model;
 using System.Text;
 using System.Windows;
@@ -42,6 +43,7 @@ namespace Medias
 
             InitializeComponent();
             LoadMoviesToDataGrid();
+            MessageBox.Show("App is running");
         }
 
         private void LoadMoviesToDataGrid()
@@ -58,7 +60,8 @@ namespace Medias
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Add was clicked");
+            var addMovieWindow = new MediaSelect();
+            addMovieWindow.Show();
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
