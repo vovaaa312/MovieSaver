@@ -34,16 +34,18 @@ namespace Medias.Forms
             if (addMovieWindow.NewMovie != null) 
             {
                 MediaItem = addMovieWindow.NewMovie;
-                MessageBox.Show($"Movie_Click \n'MediaItem'={MediaItem.ToString()}");
             }
         }
 
         private void Series_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            MessageBox.Show("Series selected");
-            //var addMovieWindow = new AddMovie();
-            //addMovieWindow.ShowDialog();
+            var addSeriesWindow = new AddSeries();
+            addSeriesWindow.ShowDialog();
+            if (addSeriesWindow.NewMovie != null)
+            {
+                MediaItem = addSeriesWindow.NewMovie;
+            }
         }
 
 

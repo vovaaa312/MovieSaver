@@ -30,9 +30,19 @@ namespace MovieSaver.Controller
         public MovieController(List<MediaItem> movies)
         {
             Movies = movies;
+            maxId = Movies.Any() ? Movies.Max(movie => movie.Id) : 0;
         }
         public MovieController()
         {
+            Movies = new List<MediaItem>();
+
+        }
+
+        public bool isEmpty() { return Movies.Count == 0; }
+
+        public void ClearAll() 
+        {
+            maxId = 0;
             Movies = new List<MediaItem>();
         }
 
@@ -40,16 +50,16 @@ namespace MovieSaver.Controller
         {
             if (movie != null)
             {
-                movie.Id = ++maxId; 
+                movie.Id = ++maxId;
                 Movies.Add(movie);
             }
             else throw new ArgumentNullException("Cannot add a NULL movie");
-            
+
         }
 
         public void RemoveMovie(MediaItem movie)
         {
-            if (!(movie is null))Movies.Remove(movie);                            
+            if (!(movie is null)) Movies.Remove(movie);
             else throw new NullReferenceException($"Movie '{movie.Name}' is not exists");
         }
 
@@ -67,7 +77,6 @@ namespace MovieSaver.Controller
                 throw new NullReferenceException($"Movie with ID '{newMovie.Id}' does not exist");
             }
 
-            // Заменяем объект в списке на новый объект
             Movies[index] = newMovie;
         }
 

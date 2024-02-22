@@ -12,48 +12,51 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace Medias.Forms
 {
     /// <summary>
-    /// Interaction logic for AddMovie.xaml
+    /// Interaction logic for AddSeries.xaml
     /// </summary>
-    public partial class AddMovie : Window
+    public partial class AddSeries : Window
     {
         private List<Genre> GenresList = new();
         private List<Author> AuthorsList = new();
 
-        public Movie NewMovie { get; set; }
-        public AddMovie()
+        public Series NewMovie { get; set; }
+
+        public AddSeries()
         {
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
             comboStatus.SelectedItem = WatchStatus.NotSelected;
-
         }
-        public AddMovie(Movie movie)
-        {
+
+        public AddSeries(Series series) {
+
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
 
-            NewMovie = (Movie)movie;
+            //NewMovie = (Series)series;
+            NewMovie = new Series();
+            NewMovie.Id = series.Id; 
 
-            txtName.Text=movie.Name;
-            txtDescription.Text=movie.Description;
-            GenresList = movie.Genres;
-            AuthorsList = movie.Authors;
-            comboStatus.SelectedItem = movie.Status;
-            txtMovieLength.Text = movie.MovieLength.TotalMinutes.ToString();
+            txtName.Text = series.Name;
+            txtDescription.Text = series.Description;
+            GenresList = series.Genres;
+            AuthorsList = series.Authors;
+            comboStatus.SelectedItem = series.Status;
+            txtAvgEpisodeLength.Text = series.Duration.TotalMinutes.ToString();
+            txtEpisodesCount.Text = series.SeriesCount.ToString();
             
             LoadGenresToList();
             LoadAuthorsToList();
-
         }
+
+    
 
         private void AddGenre_Click(object sender, RoutedEventArgs e)
         {
-
             if (GenresComboBox.SelectedItem != null)
             {
                 ComboBoxItem selectedItem = (ComboBoxItem)GenresComboBox.SelectedItem;
@@ -86,8 +89,6 @@ namespace Medias.Forms
                 MessageBox.Show("Please select a genre to delete.");
             }
         }
-
-     
 
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
@@ -126,15 +127,20 @@ namespace Medias.Forms
                 MessageBox.Show("Please select a author to delete.");
             }
         }
+
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            double length; // Используем double для парсинга времени
-            double.TryParse(txtMovieLength.Text, out length); // Парсим как Double
+            double avgEpisodeLength; // Используем double для парсинга времени
+            double.TryParse(txtAvgEpisodeLength.Text, out avgEpisodeLength); // Парсим как Double
+
+            double episodesCount = 0; // Используем double для парсинга времени
+            double.TryParse(txtEpisodesCount.Text, out avgEpisodeLength); // Парсим как Double
+
 
             string movieName = txtName.Text;
             string description = txtDescription.Text;
             WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
-            TimeSpan movieLength = TimeSpan.FromMinutes(length); // Преобразуем в TimeSpan
+            TimeSpan movieLength = TimeSpan.FromMinutes(avgEpisodeLength); // Преобразуем в TimeSpan
 
             string message = CheckFields(
                 txtName.Text,
@@ -142,21 +148,47 @@ namespace Medias.Forms
                 GenresList,
                 AuthorsList,
                 comboStatus.SelectedItem,
-                txtMovieLength.Text
+                txtAvgEpisodeLength.Text,
+                txtEpisodesCount.Text
                 );
 
             if (message.Length == 0)
             {
                 int id = 0;
-                if(NewMovie != null) id = NewMovie.Id;
+                if (NewMovie != null) id = NewMovie.Id;
 
-                NewMovie = new Movie(id, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
+                NewMovie = new Series(id, movieName, description, GenresList, AuthorsList, statusSelected, Convert.ToInt32(episodesCount),movieLength);
                 //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
                 Close();
 
             }
             else MessageBox.Show($"Errors: \n\n{message}");
         }
+
+        private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtAvgEpisodeLength, string txtEpisodesCount)
+        {
+            StringBuilder sb = new();
+
+            if (txtName.Length == 0) sb.Append("Movie name cannot be empty").Append("\n");
+            //if(txtDescription.Length == 0)
+            if (genresList.Count == 0) sb.Append("Genres list is empty").Append("\n");
+            if (authorsList.Count == 0) sb.Append("Author list is empty").Append("\n");
+            if (selectedItem.Equals(WatchStatus.NotSelected)) sb.Append("Watch status is not selected").Append("\n");
+
+            bool resAvgLength;
+            int a;
+            resAvgLength = int.TryParse(txtAvgEpisodeLength, out a);
+            if (!resAvgLength || a <= 0) sb.Append($"Wrong avg episode length value: {txtAvgEpisodeLength}").Append("\n");
+
+            bool resEpCount;
+            int b;
+            resEpCount = int.TryParse(txtEpisodesCount, out b);
+            if (!resEpCount || b <= 0) sb.Append($"Wrong episodes count value: {txtEpisodesCount}").Append("\n");
+
+
+            return sb.ToString();
+        }
+
         private void LoadGenresToList()
         {
             GenresListBox.Items.Clear();
@@ -172,27 +204,6 @@ namespace Medias.Forms
             {
                 AuthorsListBox.Items.Add(g.Name);
             }
-        }
-
-        
-
-        private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtMovieLength)
-        {
-            StringBuilder sb = new();
-
-            if (txtName.Length == 0) sb.Append("Movie name cannot be empty").Append("\n");
-            //if(txtDescription.Length == 0)
-            if(genresList.Count==0) sb.Append("Genres list is empty").Append("\n");
-            if (authorsList.Count == 0) sb.Append("Author list is empty").Append("\n");
-            if (selectedItem.Equals(WatchStatus.NotSelected)) sb.Append("Watch status is not selected").Append("\n");
-
-            bool res;
-            int a;
-            res = int.TryParse(txtMovieLength, out a);
-            
-            if(!res || a <= 0) sb.Append($"Wrong movie length value: {txtMovieLength}").Append("\n");
-
-            return sb.ToString();
         }
     }
 }

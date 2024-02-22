@@ -1,30 +1,28 @@
-﻿<Window x:Class="Medias.Forms.AddMovie"
+﻿<Window x:Class="Medias.Forms.AddSeries"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Medias.Forms"
-        mc:Ignorable="d"
-        Title="AddMovie" 
+        mc:Ignorable="d"  Title="AddSeries"  
         WindowStartupLocation="CenterScreen"
-
-        Height="350" Width="650"
-        MinHeight="350" MinWidth="650"
-        MaxHeight="350" MaxWidth="650">
-
+        Height="370" Width="650"
+        MinHeight="370" MinWidth="650"
+        MaxHeight="370" MaxWidth="650">
     <Grid Margin="5">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="90*"/>
                 <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
-
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="120px"/>
+                    <RowDefinition Height="110px"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -108,8 +106,11 @@
                 <Label Grid.Row="8" Grid.Column="0" Content="Status:"/>
                 <ComboBox  Grid.Row="9" Grid.Column="0" Margin="1" x:Name="comboStatus"/>
 
-                <Label Grid.Row="8" Grid.Column="1" Content="Movie Length:"/>
-                <TextBox Grid.Row="9" Grid.Column="1" Margin="1" x:Name="txtMovieLength"/>
+                <Label Grid.Row="8" Grid.Column="1" Content="Average episode length:"/>
+                <TextBox Grid.Row="9" Grid.Column="1" Margin="1" x:Name="txtAvgEpisodeLength"/>
+
+                <Label Grid.Row="10" Grid.Column="0" Content="Count of episodes:"/>
+                <TextBox  Grid.Row="11" Grid.Column="0" Margin="1" Height="22" x:Name="txtEpisodesCount" />
 
             </Grid>
 
