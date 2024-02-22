@@ -33,5 +33,10 @@ namespace Medias.Forms
         {
 
         }
+
+        private void Ok_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

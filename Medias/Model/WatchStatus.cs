@@ -8,6 +8,6 @@ namespace MovieSaver.Model
 {
     public enum WatchStatus
     {
-        WATCHING, WATCHED, NOT_WATCHED
+        WATCHING, WATCHED, NOT_WATCHED, NotSelected
     }
 }

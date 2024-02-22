@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieSaver.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace Medias.Forms
     /// </summary>
     public partial class MediaSelect : Window
     {
+        public MediaItem? MediaItem = null;
         public MediaSelect()
         {
             InitializeComponent();
@@ -29,6 +31,11 @@ namespace Medias.Forms
             Close();
             var addMovieWindow = new AddMovie();
             addMovieWindow.ShowDialog();
+            if (addMovieWindow.NewMovie != null) 
+            {
+                MediaItem = addMovieWindow.NewMovie;
+                MessageBox.Show($"Movie_Click \n'MediaItem'={MediaItem.ToString()}");
+            }
         }
 
         private void Series_Click(object sender, RoutedEventArgs e)
@@ -39,6 +46,6 @@ namespace Medias.Forms
             //addMovieWindow.ShowDialog();
         }
 
-       
+
     }
 }

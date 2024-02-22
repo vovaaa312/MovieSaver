@@ -43,29 +43,97 @@ namespace Medias
 
             InitializeComponent();
             LoadMoviesToDataGrid();
-            MessageBox.Show("App is running");
-        }
-
-        private void LoadMoviesToDataGrid()
-        {
-            List<MediaItem> mediaItems = controller.Movies;
-            dataGrid.Items.Clear();
-
-            foreach (var movie in mediaItems)
-            {
-                dataGrid.Items.Add(movie);
-            }
 
         }
+
+
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            var addMovieWindow = new MediaSelect();
-            addMovieWindow.Show();
+            var addMovieOrSeries = new MediaSelect();
+            addMovieOrSeries.ShowDialog();
+            if (addMovieOrSeries.MediaItem!=null) 
+            {
+                AddMediaItem(addMovieOrSeries.MediaItem);
+            }
+            
+        }
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Delete was clicked");
+            if (dataGrid.SelectedItem != null)
+            {
+               
+                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+                DeleteMediaItem(selectedItem);
+            }
+            else MessageBox.Show("Select item to delete.");
+
+        }
+
+
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            if (dataGrid.SelectedItem != null)
+            {
+                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+                
+                MessageBox.Show($"Edit item clicked.\nItem={selectedItem.ToString()}");
+                
+                if (selectedItem is Movie) EditMovieItem(selectedItem);
+                else if (selectedItem is Series) EditSeriesItem();
+                else MessageBox.Show("Error: selected item is not movie or series");
+
+            }
+            else MessageBox.Show("Select item to edit.");
+        }
+
+        private void EditMovieItem(MediaItem selectedItem)
+        {
+            var editMovieWindow = new AddMovie(selectedItem);
+            editMovieWindow.ShowDialog();
+        }
+
+        private void EditSeriesItem()
+        {
+
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Save was clicked");
+        }
+        private void Load_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Load was clicked");
+
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Clear was clicked");
+
+        }
+
+
+        private void AddMediaItem(MediaItem mediaItem)
+        {
+            controller.AddMovie(mediaItem);
+            LoadMoviesToDataGrid();
+        }
+        private void DeleteMediaItem(MediaItem selectedItem)
+        {
+            controller.RemoveMovie(selectedItem);
+            LoadMoviesToDataGrid();
+        }
+        private void LoadMoviesToDataGrid()
+        {
+            dataGrid.Items.Clear();
+            foreach (var movie in controller.Movies)
+            {
+                dataGrid.Items.Add(movie);
+            }
+
         }
     }
 }

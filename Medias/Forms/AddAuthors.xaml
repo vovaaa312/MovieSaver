@@ -10,23 +10,37 @@
         Height="278" Width="400"
         MaxHeight="278" MaxWidth="400"
         MinHeight="278" MinWidth="400">
-    <Grid>
-        <Grid Margin="0,0,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="55*"/>
+            <RowDefinition Height="15*"/>
 
-         
-            <TextBox x:Name="AuthorName" Margin="10,5,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"></TextBox>
+        </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,10,0" >
-                <Button Content="Add" Click="AddAuthor_Click" Margin="5"/>
-                <Button Content="Delete" Click="DeleteAuthor_Click" Margin="5"/>
-            </StackPanel>
 
-            <ListBox Margin="10,10,10,-174" Grid.Row="2" />
+        <Grid Grid.Row="0">
+            <TextBox x:Name="AuthorTextBox"></TextBox>
         </Grid>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal"   >
+                <Button  Height="30" Width="50" Content="+" Click="AddAuthor_Click" />
+                <Button  Height="30" Width="50" Content="-" Click="DeleteAuthor_Click" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <ListBox x:Name="GenresListBox"  />
+        </Grid>
+
+        <Grid Grid.Row="3">
+
+            <Button  Height="30" Width="50" Content="OK" Click="Ok_Click" />
+        </Grid>
+
+
     </Grid>
 </Window>

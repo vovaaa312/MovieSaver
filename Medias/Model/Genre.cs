@@ -14,5 +14,9 @@ namespace MovieSaver.Model
         {
             Name = name;
         }
+
+        //public string ToString() { 
+        
+        //}
     }
 }
