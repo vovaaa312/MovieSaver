@@ -1,1 +1,1 @@
-Desctop WPF app to manage movies.
+Desktop WPF app to manage movies.
