@@ -53,10 +53,24 @@ namespace MovieSaver.Controller
             else throw new NullReferenceException($"Movie '{movie.Name}' is not exists");
         }
 
-        public void EditMovie(MediaItem movie)
+        public void EditMovie(MediaItem newMovie)
         {
+            if (newMovie == null)
+            {
+                throw new ArgumentNullException(nameof(newMovie), "Cannot edit a NULL movie");
+            }
 
+            int index = Movies.FindIndex(movie => movie.Id == newMovie.Id);
+
+            if (index == -1)
+            {
+                throw new NullReferenceException($"Movie with ID '{newMovie.Id}' does not exist");
+            }
+
+            // Заменяем объект в списке на новый объект
+            Movies[index] = newMovie;
         }
+
 
     }
 }

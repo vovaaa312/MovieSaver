@@ -15,8 +15,15 @@ namespace MovieSaver.Model
             Name = name;
         }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is Genre genre &&
+                   Name == genre.Name;
+        }
+
+
         //public string ToString() { 
-        
+
         //}
     }
 }

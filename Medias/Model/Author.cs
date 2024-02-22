@@ -14,5 +14,11 @@ namespace MovieSaver.Model
         {
             Name = name;
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Author author &&
+                   Name == author.Name;
+        }
     }
 }

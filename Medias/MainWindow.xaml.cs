@@ -79,7 +79,7 @@ namespace Medias
             {
                 MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
                 
-                MessageBox.Show($"Edit item clicked.\nItem={selectedItem.ToString()}");
+                //MessageBox.Show($"Edit item clicked.\nItem={selectedItem.ToString()}");
                 
                 if (selectedItem is Movie) EditMovieItem(selectedItem);
                 else if (selectedItem is Series) EditSeriesItem();
@@ -93,6 +93,20 @@ namespace Medias
         {
             var editMovieWindow = new AddMovie(selectedItem);
             editMovieWindow.ShowDialog();
+
+
+            MediaItem mi = editMovieWindow.NewMovie;
+           bool itemsEqual = selectedItem.Equals(editMovieWindow.NewMovie);
+            MessageBox.Show($"Selected item:{selectedItem.ToString()}\nNew item:{mi.ToString()}\nItemsEqual={itemsEqual.ToString()}");
+
+            //if (!mi.Equals(editMovieWindow.NewMovie)) 
+            if (!itemsEqual) 
+            {
+                MessageBox.Show($"EditMovieItem item edited: {mi}");
+                controller.EditMovie(mi);
+                
+                LoadMoviesToDataGrid();
+            }
         }
 
         private void EditSeriesItem()

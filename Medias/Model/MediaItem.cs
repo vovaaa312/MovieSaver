@@ -11,16 +11,34 @@ namespace MovieSaver.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<Genre> Genres { get; set; }
-        public List<Author> Authors { get; set; }
 
+        private List<Genre> _genres;
+        public List<Genre> Genres
+        {
+            get => _genres;
+            set
+            {
+                _genres = value;
+                UpdateGenresString();
+            }
+        }
+
+        private List<Author> _authors;
+        public List<Author> Authors
+        {
+            get => _authors;
+            set
+            {
+                _authors = value;
+                UpdateAuthorsString();
+            }
+        }
         public WatchStatus Status { get; set; }
 
         public abstract TimeSpan Duration { get; }
 
-        public string GenresString => string.Join(", ", Genres.Select(genre => genre.Name));
-        public string AuthorsString => string.Join(", ", Authors.Select(author => author.Name));
-
+        public string GenresString { get; private set; }
+        public string AuthorsString { get; private set; }
 
         public MediaItem()
         {
@@ -55,8 +73,33 @@ namespace MovieSaver.Model
             }
 
             builder.Append($", Status: {Status}");
-
+            builder.Append($", Duration: {Duration.TotalMinutes}");
             return builder.ToString();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return 
+                   obj is MediaItem item &&
+                   Id == item.Id &&
+                   Name == item.Name &&
+                   Description == item.Description &&
+                   EqualityComparer<List<Genre>>.Default.Equals(Genres, item.Genres) &&
+                   EqualityComparer<List<Author>>.Default.Equals(Authors, item.Authors) &&
+                   Status == item.Status &&
+                   Duration.Equals(item.Duration);
+        }
+
+
+
+        private void UpdateGenresString()
+        {
+            GenresString = string.Join(", ", Genres.Select(genre => genre.Name));
+        }
+
+        private void UpdateAuthorsString()
+        {
+            AuthorsString = string.Join(", ", Authors.Select(author => author.Name));
         }
     }
 }

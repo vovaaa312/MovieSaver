@@ -37,12 +37,14 @@ namespace Medias.Forms
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
 
+            NewMovie = (Movie)movie;
+
             txtName.Text=movie.Name;
             txtDescription.Text=movie.Description;
             GenresList = movie.Genres;
             AuthorsList = movie.Authors;
             comboStatus.SelectedItem = movie.Status;
-            txtMovieLength.Text = movie.Duration.Minutes.ToString();
+            txtMovieLength.Text = movie.Duration.TotalMinutes.ToString();
             
             LoadGenresToList();
             LoadAuthorsToList();
@@ -131,44 +133,6 @@ namespace Medias.Forms
                 MessageBox.Show("Please select a author to delete.");
             }
         }
-        private void LoadAuthorsToList()
-        {
-            AuthorsListBox.Items.Clear();
-            foreach (var g in AuthorsList)
-            {
-                AuthorsListBox.Items.Add(g.Name);
-            }
-        }
-
-        //private void Save_Click(object sender, RoutedEventArgs e)
-        //{
-        //    int length;
-        //    int.TryParse(txtMovieLength.Text, out length);
-
-        //    string movieName = txtName.Text;
-        //    string description = txtDescription.Text;
-        //    List<Genre> genres = GenresList;
-        //    List<Author> authors = AuthorsList;
-        //    WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
-        //    TimeSpan movieLength = TimeSpan.FromMinutes(length);
-
-        //    string message = CheckFields(
-        //        txtName.Text,
-        //        txtDescription.Text,
-        //        GenresList,
-        //        AuthorsList,
-        //        comboStatus.SelectedItem,
-        //        txtMovieLength.Text
-        //        );
-
-        //    if (message.Length == 0)
-        //    {
-        //        NewMovie = new Movie(0, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
-        //        Close();
-        //    }
-        //    else MessageBox.Show($"Errors: \n\n{message}");
-        //}
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             double length; // Используем double для парсинга времени
@@ -176,8 +140,6 @@ namespace Medias.Forms
 
             string movieName = txtName.Text;
             string description = txtDescription.Text;
-            List<Genre> genres = GenresList;
-            List<Author> authors = AuthorsList;
             WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
             TimeSpan movieLength = TimeSpan.FromMinutes(length); // Преобразуем в TimeSpan
 
@@ -192,12 +154,24 @@ namespace Medias.Forms
 
             if (message.Length == 0)
             {
-                NewMovie = new Movie(0, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
+                int id = 0;
+                if(NewMovie != null) id = NewMovie.Id;
+
+                NewMovie = new Movie(id, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
+                //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
                 Close();
+
             }
             else MessageBox.Show($"Errors: \n\n{message}");
         }
-
+        private void LoadAuthorsToList()
+        {
+            AuthorsListBox.Items.Clear();
+            foreach (var g in AuthorsList)
+            {
+                AuthorsListBox.Items.Add(g.Name);
+            }
+        }
 
         private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtMovieLength)
         {
