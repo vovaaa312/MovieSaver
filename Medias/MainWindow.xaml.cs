@@ -2,6 +2,7 @@
 using MovieSaver.Controller;
 using MovieSaver.Model;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -60,7 +61,7 @@ namespace Medias
          ));
 
             InitializeComponent();
-           // dataGrid.ItemsSource = new ObservableCollection<MediaItem>();
+            // dataGrid.ItemsSource = new ObservableCollection<MediaItem>();
 
             LoadMoviesToDataGrid();
 
@@ -82,20 +83,43 @@ namespace Medias
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show("Delete was clicked");
-            if (dataGrid.SelectedItem != null)
-            {
 
-                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
-                DeleteMediaItem(selectedItem);
-            }
-            else MessageBox.Show("Select item to delete.");
+            DeleteMediaItem();
+
 
         }
 
+        private void DeleteMediaItem()
+        {
+            //MessageBox.Show("Delete was clicked");
+            if (dataGrid.SelectedItem != null)
+            {
+                // Get selected item
+                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
 
+                // Show dialog
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete '{selectedItem.Name}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                // Check dialog result
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Delete item if user confirm
+                    DeleteMediaItem(selectedItem);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Select an item to delete.");
+            }
+
+        }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            EditMediaItem();
+        }
+
+        private void EditMediaItem()
         {
             if (dataGrid.SelectedItem != null)
             {
@@ -122,27 +146,29 @@ namespace Medias
             //if (!mi.Equals(editMovieWindow.NewMovie)) 
             if (!itemsEqual)
             {
-                MessageBox.Show("!selectedItem.Equals(editMovieWindow.NewMovie)");
+                //MessageBox.Show("!selectedItem.Equals(editMovieWindow.NewMovie)");
                 controller.EditMovie(mi);
                 LoadMoviesToDataGrid();
             }
+
         }
 
         private void EditSeriesItem(MediaItem selectedItem)
         {
-            MessageBox.Show("Edit series was clicked");
-            var editSeriesWindow = new AddSeries((Series)selectedItem);
-            editSeriesWindow.ShowDialog();
-            Series mi = editSeriesWindow.NewMovie;
+            //var editSeriesWindow = new AddSeries((Series)selectedItem);
+            //editSeriesWindow.ShowDialog();
+            //Series mi = editSeriesWindow.NewMovie;
 
-            bool itemsEqual = selectedItem.Equals(editSeriesWindow.NewMovie);
+            //bool itemsEqual = selectedItem.Equals(mi);
 
-            //if (!mi.Equals(editMovieWindow.NewMovie)) 
-            if (!itemsEqual)
-            {
-                controller.EditMovie(mi);
-                LoadMoviesToDataGrid();
-            }
+            ////if (!mi.Equals(editMovieWindow.NewMovie)) 
+            //if (!itemsEqual)
+            //{
+            //    MessageBox.Show($"new item:= {mi.ToString()}");
+            //    controller.EditMovie(mi);
+            //    LoadMoviesToDataGrid();
+            //}
+            MessageBox.Show("Edit series was clicked.");
 
         }
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -157,10 +183,23 @@ namespace Medias
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            if (!controller.isEmpty())
+
+
+
+            if (!controller.IsEmpty())
             {
-                controller.ClearAll();
-                LoadMoviesToDataGrid();
+
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete all items?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                // Check dialog result
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Delete item if user confirm
+                    controller.ClearAll();
+                    LoadMoviesToDataGrid();
+                }
+
+
             }
             else MessageBox.Show("Movie list is empty.");
 
@@ -184,12 +223,12 @@ namespace Medias
         }
         private void DeleteMediaItem(MediaItem selectedItem)
         {
-            controller.RemoveMovie(selectedItem);
+            controller.DeleteMovie(selectedItem);
             LoadMoviesToDataGrid();
         }
         private void LoadMoviesToDataGrid()
         {
-            
+
             dataGrid.ItemsSource = new ObservableCollection<MediaItem>(controller.Movies);
 
 
@@ -200,35 +239,20 @@ namespace Medias
 
         }
 
-        //private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        //{
-        //    //// Получите элемент DataGridRow, на который был совершен двойной щелчок
-        //    //DataGridRow row = sender as DataGridRow;
-
-        //    //// Проверьте, что щелчок произошел на реальной строке данных, а не на заголовке или пустой области
-        //    //if (row != null && row.Item != null)
-        //    //{
-        //    //    // Получите объект, связанный с этой строкой данных (в вашем случае это MediaItem)
-        //    //    MediaItem selectedItem = row.Item as MediaItem;
-
-        //    //    // Выполните необходимые действия с выбранным элементом (например, редактирование)
-        //    //    EditMediaItem(selectedItem);
-        //    //}
-
-        //    MessageBox.Show("Item double clicked");
-        //}
 
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is DataGrid grid && grid.SelectedItem != null)
             {
                 // Приведение выбранного элемента к вашему типу данных, если это необходимо
-                var item = (MediaItem)grid.SelectedItem;
+                //var item = (MediaItem)grid.SelectedItem;
 
                 // Выполнение действия с выбранным элементом
-                MessageBox.Show($"Двойной клик на элемент: {item.ToString()}");
+                //MessageBox.Show($"Double click on item: {item.ToString()}");
+                EditMediaItem();
             }
         }
+
 
     }
 }

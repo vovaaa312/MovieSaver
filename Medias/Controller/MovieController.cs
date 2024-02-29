@@ -30,7 +30,9 @@ namespace MovieSaver.Controller
         public MovieController(List<MediaItem> movies)
         {
             Movies = movies;
-            maxId = Movies.Any() ? Movies.Max(movie => movie.Id) : 0;
+            if (Movies.Any()) maxId = Movies.Max(movie => movie.Id);
+            else maxId = 0;
+
         }
         public MovieController()
         {
@@ -38,9 +40,9 @@ namespace MovieSaver.Controller
 
         }
 
-        public bool isEmpty() { return Movies.Count == 0; }
+        public bool IsEmpty() { return Movies.Count == 0; }
 
-        public void ClearAll() 
+        public void ClearAll()
         {
             maxId = 0;
             Movies = new List<MediaItem>();
@@ -57,7 +59,7 @@ namespace MovieSaver.Controller
 
         }
 
-        public void RemoveMovie(MediaItem movie)
+        public void DeleteMovie(MediaItem movie)
         {
             if (!(movie is null)) Movies.Remove(movie);
             else throw new NullReferenceException($"Movie '{movie.Name}' is not exists");

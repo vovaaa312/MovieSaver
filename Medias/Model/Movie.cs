@@ -20,5 +20,6 @@ namespace MovieSaver.Model
 
         public override TimeSpan Duration => MovieLength;
 
+        public override string DurationToString { get => MovieLength.ToString();  }
     }
 }

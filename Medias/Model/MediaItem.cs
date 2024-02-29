@@ -12,6 +12,8 @@ namespace MovieSaver.Model
         public string Name { get; set; }
         public string Description { get; set; }
 
+        //добавить абстрактный список сезонов. у movie = null
+
         private List<Genre> _genres;
         public List<Genre> Genres
         {
@@ -36,6 +38,8 @@ namespace MovieSaver.Model
         public WatchStatus Status { get; set; }
 
         public abstract TimeSpan Duration { get; }
+
+        public abstract string DurationToString { get; }
 
         public string GenresString { get; private set; }
         public string AuthorsString { get; private set; }
@@ -73,21 +77,60 @@ namespace MovieSaver.Model
             }
 
             builder.Append($", Status: {Status}");
-            builder.Append($", Duration: {Duration.TotalMinutes}");
+            
             return builder.ToString();
         }
 
+
+
+
+        
+        //public override bool Equals(object? obj)
+        //{
+        //    return 
+        //           obj is MediaItem item &&
+        //           Id == item.Id &&
+        //           Name == item.Name &&
+        //           Description == item.Description &&
+        //           EqualityComparer<List<Genre>>.Default.Equals(Genres, item.Genres) &&
+        //           EqualityComparer<List<Author>>.Default.Equals(Authors, item.Authors) &&
+        //           Status == item.Status &&
+        //           Duration.Equals(item.Duration);
+        //}
+
         public override bool Equals(object? obj)
         {
-            return 
+            return
                    obj is MediaItem item &&
                    Id == item.Id &&
                    Name == item.Name &&
                    Description == item.Description &&
-                   EqualityComparer<List<Genre>>.Default.Equals(Genres, item.Genres) &&
-                   EqualityComparer<List<Author>>.Default.Equals(Authors, item.Authors) &&
+                    AreListsEqual(Genres, item.Genres)&&
+                    AreListsEqual(Authors, item.Authors) &&
+
                    Status == item.Status &&
                    Duration.Equals(item.Duration);
+        }
+
+        private static bool AreListsEqual<T>(List<T> list1, List<T> list2)
+        {
+            // Checking list lengths
+            if (list1.Count != list2.Count)
+            {
+                return false;
+            }
+
+            // Compare each element
+            for (int i = 0; i < list1.Count; i++)
+            {
+                if (!list1[i].Equals(list2[i]))
+                {
+                    return false;
+                }
+            }
+
+            // If all elements match
+            return true;
         }
 
 

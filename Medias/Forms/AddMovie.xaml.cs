@@ -39,13 +39,13 @@ namespace Medias.Forms
 
             NewMovie = (Movie)movie;
 
-            txtName.Text=movie.Name;
-            txtDescription.Text=movie.Description;
+            txtName.Text = movie.Name;
+            txtDescription.Text = movie.Description;
             GenresList = movie.Genres;
             AuthorsList = movie.Authors;
             comboStatus.SelectedItem = movie.Status;
             txtMovieLength.Text = movie.MovieLength.TotalMinutes.ToString();
-            
+
             LoadGenresToList();
             LoadAuthorsToList();
 
@@ -75,19 +75,27 @@ namespace Medias.Forms
 
         private void DeleteGenre_Click(object sender, RoutedEventArgs e)
         {
-            if (GenresListBox.SelectedItem != null)
+            if (GenresList.Count == 1)
             {
-                string selectedGenre = (string)GenresListBox.SelectedItem;
-                GenresList.RemoveAll(g => g.Name == selectedGenre);
-                LoadGenresToList();
+                MessageBox.Show("Error: movie must have at least 1 genre.");
             }
             else
             {
-                MessageBox.Show("Please select a genre to delete.");
+                if (GenresListBox.SelectedItem != null)
+                {
+                    string selectedGenre = (string)GenresListBox.SelectedItem;
+                    GenresList.RemoveAll(g => g.Name == selectedGenre);
+                    LoadGenresToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a genre to delete.");
+                }
             }
+
         }
 
-     
+
 
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
@@ -148,7 +156,7 @@ namespace Medias.Forms
             if (message.Length == 0)
             {
                 int id = 0;
-                if(NewMovie != null) id = NewMovie.Id;
+                if (NewMovie != null) id = NewMovie.Id;
 
                 NewMovie = new Movie(id, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
                 //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
@@ -174,7 +182,7 @@ namespace Medias.Forms
             }
         }
 
-        
+
 
         private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtMovieLength)
         {
@@ -182,15 +190,15 @@ namespace Medias.Forms
 
             if (txtName.Length == 0) sb.Append("Movie name cannot be empty").Append("\n");
             //if(txtDescription.Length == 0)
-            if(genresList.Count==0) sb.Append("Genres list is empty").Append("\n");
+            if (genresList.Count == 0) sb.Append("Genres list is empty").Append("\n");
             if (authorsList.Count == 0) sb.Append("Author list is empty").Append("\n");
             if (selectedItem.Equals(WatchStatus.NotSelected)) sb.Append("Watch status is not selected").Append("\n");
 
             bool res;
             int a;
             res = int.TryParse(txtMovieLength, out a);
-            
-            if(!res || a <= 0) sb.Append($"Wrong movie length value: {txtMovieLength}").Append("\n");
+
+            if (!res || a <= 0) sb.Append($"Wrong movie length value: {txtMovieLength}").Append("\n");
 
             return sb.ToString();
         }

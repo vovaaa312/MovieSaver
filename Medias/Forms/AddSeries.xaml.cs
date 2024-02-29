@@ -1,6 +1,9 @@
-﻿using MovieSaver.Model;
+﻿using Medias.Controller;
+using Medias.Model;
+using MovieSaver.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +24,12 @@ namespace Medias.Forms
     public partial class AddSeries : Window
     {
         private List<Genre> GenresList = new();
+
         private List<Author> AuthorsList = new();
 
+        //private List<Season> SeasonList = new();
+
+        private SeasonsController seasonsController = new();
         public Series NewMovie { get; set; }
 
         public AddSeries()
@@ -31,140 +38,322 @@ namespace Medias.Forms
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
             comboStatus.SelectedItem = WatchStatus.NotSelected;
         }
+        //public AddSeries(Series series)
+        //{
 
-        public AddSeries(Series series) {
+        //    InitializeComponent();
+        //    comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
 
-            InitializeComponent();
-            comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
+        //    NewMovie = (Series)series;
+        //    //NewMovie = new Series();
+        //    //NewMovie.Id = series.Id; 
 
-            //NewMovie = (Series)series;
-            NewMovie = new Series();
-            NewMovie.Id = series.Id; 
+        //    txtName.Text = series.Name;
+        //    txtDescription.Text = series.Description;
+        //    GenresList = series.Genres;
+        //    AuthorsList = series.Authors;
+        //    comboStatus.SelectedItem = series.Status;
+        //    txtAvgEpisodeLength.Text = (series.Duration.TotalMinutes / series.SeriesCount).ToString();
+        //    txtEpisodesCount.Text = series.SeriesCount.ToString();
 
-            txtName.Text = series.Name;
-            txtDescription.Text = series.Description;
-            GenresList = series.Genres;
-            AuthorsList = series.Authors;
-            comboStatus.SelectedItem = series.Status;
-            txtAvgEpisodeLength.Text = series.Duration.TotalMinutes.ToString();
-            txtEpisodesCount.Text = series.SeriesCount.ToString();
-            
-            LoadGenresToList();
-            LoadAuthorsToList();
-        }
+        //    LoadGenresToList();
+        //    LoadAuthorsToList();
 
-    
+        //}
+
+
 
         private void AddGenre_Click(object sender, RoutedEventArgs e)
         {
-            if (GenresComboBox.SelectedItem != null)
+            ComboBoxItem selectedItem = (ComboBoxItem)GenresComboBox.SelectedItem;
+            
+            if (selectedItem == null)
             {
-                ComboBoxItem selectedItem = (ComboBoxItem)GenresComboBox.SelectedItem;
-                string genreName = selectedItem.Content.ToString();
-                if (!GenresList.Any(g => g.Name == genreName))  // if selected genre not in the list...
-                {
-                    //then add new genre to list
-                    GenresList.Add(new Genre(genreName));
-                    //update list
-                    LoadGenresToList();
-                }
-                else
-                {
-                    MessageBox.Show("This genre already exists in the list.");
-                }
-
+                ShowError("Select a genre from the dropdown list.");
+                return;
             }
-        }
 
+            string genreName = selectedItem.Content.ToString();
+            if (GenresList.Any(g => g.Name == genreName))
+            {
+                ShowError($"Genre '{genreName}' already  in the list.");
+                return;
+            }
+
+            //add new genre to list
+            GenresList.Add(new Genre(genreName));
+            //update list
+            LoadGenresToList();
+
+        }
         private void DeleteGenre_Click(object sender, RoutedEventArgs e)
         {
-            if (GenresListBox.SelectedItem != null)
+            if (GenresList.Count == 0)
             {
-                string selectedGenre = (string)GenresListBox.SelectedItem;
-                GenresList.RemoveAll(g => g.Name == selectedGenre);
-                LoadGenresToList();
+                ShowError("Genre list is empty.");
+                return;
             }
-            else
+            if (GenresListBox.SelectedItem == null)
             {
-                MessageBox.Show("Please select a genre to delete.");
+                ShowError("Please select a genre to delete.");
+                return;
             }
-        }
+            if (GenresList.Count == 1)
+            {
+                ShowError("Movie must have at least 1 genre.");
+                return;
+            }
 
+
+            if (GenresList.Count == 0)
+            {
+                ShowError("Genre list is empty.");
+                return;
+            }
+
+            string selectedGenre = (string)GenresListBox.SelectedItem;
+            GenresList.RemoveAll(g => g.Name == selectedGenre);
+            LoadGenresToList();
+
+
+        }
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
+            //string authName = AuthorNameTextBox.Text;
+            //if (authName.Length > 0)
+            //{
+            //    Author auth = new(authName);
+
+            //    if (!AuthorsList.Any(g => g.Name == authName))  // if new author not in the list...
+            //    {
+            //        //then add new author to list
+            //        AuthorsList.Add(auth);
+            //        //update list
+            //        LoadAuthorsToList();
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("This author already exists in the list.");
+            //    }
+
+            //}
+            //else MessageBox.Show("Enter author name.");
+
+
             string authName = AuthorNameTextBox.Text;
-            if (authName.Length > 0)
+            if (!(authName.Length > 0))
             {
-                Author auth = new(authName);
-
-                if (!AuthorsList.Any(g => g.Name == authName))  // if new author not in the list...
-                {
-                    //then add new author to list
-                    AuthorsList.Add(auth);
-                    //update list
-                    LoadAuthorsToList();
-                }
-                else
-                {
-                    MessageBox.Show("This author already exists in the list.");
-                }
-
+                ShowError("Enter author name.");
+                return;
             }
-            else MessageBox.Show("Enter author name.");
+
+            if (AuthorsList.Any(g => g.Name == authName))
+            {
+                ShowError($"Autor '{authName}' already in the list.");
+                return;
+            }
+
+            Author auth = new(authName);
+            // add new author to list
+            AuthorsList.Add(auth);
+            //update list
+            LoadAuthorsToList();
+            //clear text box
+            AuthorNameTextBox.Clear();
 
         }
-
         private void DeleteAuthor_Click(object sender, RoutedEventArgs e)
         {
-            if (AuthorsListBox.SelectedItem != null)
+            if (AuthorsList.Count == 0)
             {
-                string selectedAuthor = (string)AuthorsListBox.SelectedItem;
-                AuthorsList.RemoveAll(g => g.Name == selectedAuthor);
-                LoadAuthorsToList();
+                ShowError("Author list is empty.");
+                return;
+            }
+            if (AuthorsListBox.SelectedItem == null) 
+            {
+                ShowError("Select author to delete.");
+                return;
+            }
+            if (AuthorsList.Count == 1)
+            {
+                ShowError("Movie must have at least 1 author.");
+                return;
+            }
+
+
+            string selectedAuthor = (string)AuthorsListBox.SelectedItem;
+            AuthorsList.RemoveAll(g => g.Name == selectedAuthor);
+            LoadAuthorsToList();
+
+
+        }
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            Save();
+        }
+
+        private void AddSeason_Click(object sender, RoutedEventArgs e)
+        {
+            string name = txtSeasonName.Text;
+            string description = txtSeasonDescription.Text;
+            string episodes = txtEpisodesCount.Text;
+            string message = checkSeasonFields(name, description, episodes);
+
+            if (message.Length != 0 ) 
+            {
+                ShowError(message);
+                return;
+            }
+            Season season = new Season(0, name, description, Convert.ToInt32(episodes));
+            seasonsController.AddSeason(season);
+            LoadSeasonsToList();
+        }
+
+
+
+        private void DeleteSeason_Click(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Delete was clicked");
+            //if (SeasonsListBox.SelectedItem != null)
+            //{
+            //    // Get selected item
+            //    Season selectedItem = (Season)SeasonsListBox.SelectedItem;
+
+            //    // Show dialog
+            //    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete '{selectedItem.Name}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            //    // Check dialog result
+            //    if (result == MessageBoxResult.Yes)
+            //    {
+            //        // Delete item if user confirm
+            //        DeleteSeason(selectedItem);
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Select an item to delete.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    //MessageBox.Show("Select an item to delete.");
+            //}
+
+
+            if (seasonsController.IsEmpty())
+            {
+                ShowError("Seasons list is empty.");
+                return;
+            }
+
+            if (SeasonsListBox.SelectedItem == null) 
+            {
+                ShowError("Select season to delete.");
+                return;
+            }
+
+            Season selectedItem = (Season)SeasonsListBox.SelectedItem;
+
+            // Show dialog
+            //MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete '{selectedItem.Name}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            bool confirm = ShowConfirmationDialog($"Are you sure you want to delete '{selectedItem.Name}'?");
+            // Check dialog result
+            if (confirm)
+            {
+                // Delete item if user confirm
+                DeleteSeason(selectedItem);
+            }
+        }
+
+        private void ClearSeasons_Click(object sender, RoutedEventArgs e)
+        {
+            if (seasonsController.IsEmpty())
+            {
+                MessageBox.Show($"Season list is empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
-                MessageBox.Show("Please select a author to delete.");
+
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to clear seasons list?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                // Check dialog result
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Delete item if user confirm
+                    seasonsController.Clear();
+                    LoadSeasonsToList();
+                }
             }
+
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void DeleteSeason(Season selectedItem)
         {
-            double avgEpisodeLength; // Используем double для парсинга времени
-            double.TryParse(txtAvgEpisodeLength.Text, out avgEpisodeLength); // Парсим как Double
-
-            double episodesCount = 0; // Используем double для парсинга времени
-            double.TryParse(txtEpisodesCount.Text, out avgEpisodeLength); // Парсим как Double
-
-
-            string movieName = txtName.Text;
-            string description = txtDescription.Text;
-            WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
-            TimeSpan movieLength = TimeSpan.FromMinutes(avgEpisodeLength); // Преобразуем в TimeSpan
-
-            string message = CheckFields(
-                txtName.Text,
-                txtDescription.Text,
-                GenresList,
-                AuthorsList,
-                comboStatus.SelectedItem,
-                txtAvgEpisodeLength.Text,
-                txtEpisodesCount.Text
-                );
-
-            if (message.Length == 0)
-            {
-                int id = 0;
-                if (NewMovie != null) id = NewMovie.Id;
-
-                NewMovie = new Series(id, movieName, description, GenresList, AuthorsList, statusSelected, Convert.ToInt32(episodesCount),movieLength);
-                //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
-                Close();
-
-            }
-            else MessageBox.Show($"Errors: \n\n{message}");
+            seasonsController.DeleteSeason(selectedItem);
+            LoadSeasonsToList();
         }
 
+
+
+        private void Save()
+        {
+            //int avgEpisodeLength; // Используем double для парсинга времени
+            //int.TryParse(txtAvgEpisodeLength.Text, out avgEpisodeLength); // Парсим как Double
+
+            //double episodesCount = 0; // Используем double для парсинга времени
+            //double.TryParse(txtEpisodesCount.Text, out episodesCount); // Парсим как Double
+
+
+            //string movieName = txtName.Text;
+            //string description = txtDescription.Text;
+            //WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
+            //TimeSpan movieLength = TimeSpan.FromMinutes(avgEpisodeLength); // Преобразуем в TimeSpan
+
+            //string message = CheckFields(
+            //    txtName.Text,
+            //    txtDescription.Text,
+            //    GenresList,
+            //    AuthorsList,
+            //    comboStatus.SelectedItem,
+            //    txtAvgEpisodeLength.Text,
+            //    txtEpisodesCount.Text
+            //    );
+
+            //if (message.Length == 0)
+            //{
+            //    int id = 0;
+            //    if (NewMovie != null) id = NewMovie.Id;
+
+            //    NewMovie = new Series(id, movieName, description, GenresList, AuthorsList, statusSelected, Convert.ToInt32(episodesCount), movieLength);
+            //    //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
+            //    Close();
+
+            //}
+            //else MessageBox.Show($"Errors: \n\n{message}");
+            MessageBox.Show("Save was clicked");
+        }
+        private void LoadGenresToList()
+        {
+            GenresListBox.Items.Clear();
+            foreach (var g in GenresList)
+            {
+                GenresListBox.Items.Add(g.Name);
+            }
+        }
+        private void LoadAuthorsToList()
+        {
+            AuthorsListBox.Items.Clear();
+            foreach (var g in AuthorsList)
+            {
+                AuthorsListBox.Items.Add(g.Name);
+            }
+        }
+        private void LoadSeasonsToList()
+        {
+            SeasonsListBox.ItemsSource = new ObservableCollection<Season>(seasonsController.Seasons);
+
+            //SeasonsListBox.Items.Clear();
+            //foreach (var g in seasonsController.Seasons)
+            //{
+            //    SeasonsListBox.Items.Add(g.ToString());
+            //}
+        }
         private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtAvgEpisodeLength, string txtEpisodesCount)
         {
             StringBuilder sb = new();
@@ -189,21 +378,29 @@ namespace Medias.Forms
             return sb.ToString();
         }
 
-        private void LoadGenresToList()
+        private string checkSeasonFields(string seasonName, string seasonDescription, string episodesCount)
         {
-            GenresListBox.Items.Clear();
-            foreach (var g in GenresList)
-            {
-                GenresListBox.Items.Add(g.Name);
-            }
+            StringBuilder sb = new();
+            if (seasonName.Length == 0 || seasonName is null) sb.Append("Season name cannot be empty").Append("\n");
+
+            bool epCount;
+            int a;
+            epCount = int.TryParse(episodesCount, out a);
+            if (!epCount || a <= 0) sb.Append($"Wrong avg episode length value: {episodesCount}").Append("\n");
+
+
+            return sb.ToString();
         }
-        private void LoadAuthorsToList()
+
+        private void ShowError(string message)
         {
-            AuthorsListBox.Items.Clear();
-            foreach (var g in AuthorsList)
-            {
-                AuthorsListBox.Items.Add(g.Name);
-            }
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private bool ShowConfirmationDialog(string message) 
+        {
+            MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
         }
     }
 }

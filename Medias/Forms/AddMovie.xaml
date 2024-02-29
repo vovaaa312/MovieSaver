@@ -8,9 +8,9 @@
         Title="AddMovie" 
         WindowStartupLocation="CenterScreen"
 
-        Height="350" Width="650"
-        MinHeight="350" MinWidth="650"
-        MaxHeight="350" MaxWidth="650">
+        Height="325" Width="650"
+        MinHeight="325" MinWidth="650"
+        MaxHeight="650" MaxWidth="1300">
 
     <Grid Margin="5">
         <Grid>
