@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Medias.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace MovieSaver.Model
 {
-    public abstract class MediaItem
+    [Serializable]
+    public abstract class MediaItem 
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -37,7 +39,7 @@ namespace MovieSaver.Model
         }
         public WatchStatus Status { get; set; }
 
-        public abstract TimeSpan Duration { get; }
+        //public abstract TimeSpan Duration { get; }
 
         public abstract string DurationToString { get; }
 
@@ -108,8 +110,7 @@ namespace MovieSaver.Model
                     AreListsEqual(Genres, item.Genres)&&
                     AreListsEqual(Authors, item.Authors) &&
 
-                   Status == item.Status &&
-                   Duration.Equals(item.Duration);
+                   Status == item.Status;
         }
 
         private static bool AreListsEqual<T>(List<T> list1, List<T> list2)

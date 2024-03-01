@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace MovieSaver.Model
 {
+    [Serializable]
+
     public class Series : MediaItem
     {
         public int SeriesCount { get; set; }
@@ -20,23 +22,14 @@ namespace MovieSaver.Model
         {
         }
 
-        public Series(int id, string name, string description, List<Genre> genres,
-            List<Author> authors, WatchStatus status, int seriesCount, TimeSpan averageSeriesLength) : base(id, name, description, genres, authors, status)
-        {
-            SeriesCount = seriesCount;
-            AverageSeriesLength = averageSeriesLength;
-        }
+
 
         public Series(int id, string name, string description, List<Genre> genres,
-            List<Author> authors, WatchStatus status, int seriesCount, TimeSpan averageSeriesLength, List<Season> seasons) : base(id, name, description, genres, authors, status)
+            List<Author> authors, WatchStatus status, List<Season> seasons) : base(id, name, description, genres, authors, status)
         {
-            SeriesCount = seriesCount;
-            AverageSeriesLength = averageSeriesLength;
             Seasons = seasons;
         }
 
-        public override TimeSpan Duration => TimeSpan.FromMinutes(AverageSeriesLength.TotalMinutes * SeriesCount);
-
-       
+      
     }
 }

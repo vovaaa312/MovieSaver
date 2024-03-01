@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace MovieSaver.Model
 {
+    [Serializable]
+
     public class Genre
     {
         public string Name { get; set; }
@@ -21,9 +23,5 @@ namespace MovieSaver.Model
                    Name == genre.Name;
         }
 
-
-        //public string ToString() { 
-
-        //}
     }
 }

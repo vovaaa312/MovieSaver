@@ -1,8 +1,10 @@
 ﻿using Medias.Forms;
+using Medias.MediaIO;
 using MovieSaver.Controller;
 using MovieSaver.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,22 +45,22 @@ namespace Medias
 
                     ));
 
-            controller.AddMovie(
-             new Series(
-            0,
-            "Series1",
-            "Good series",
-            new List<Genre>() {
-                new Genre("action"),new Genre("comedy")
-                             },
-             new List<Author>()
-                             {
-                new Author("John Doe")
-                             },
-             WatchStatus.WATCHED, 15,
-            TimeSpan.FromMinutes(30)
+            //   controller.AddMovie(
+            //    new Series(
+            //   0,
+            //   "Series1",
+            //   "Good series",
+            //   new List<Genre>() {
+            //       new Genre("action"),new Genre("comedy")
+            //                    },
+            //    new List<Author>()
+            //                    {
+            //       new Author("John Doe")
+            //                    },
+            //    WatchStatus.WATCHED, 15,
+            //   TimeSpan.FromMinutes(30)
 
-         ));
+            //));
 
             InitializeComponent();
             // dataGrid.ItemsSource = new ObservableCollection<MediaItem>();
@@ -68,8 +70,6 @@ namespace Medias
 
 
         }
-
-
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
@@ -83,33 +83,31 @@ namespace Medias
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-
             DeleteMediaItem();
-
-
         }
-
         private void DeleteMediaItem()
         {
-            //MessageBox.Show("Delete was clicked");
-            if (dataGrid.SelectedItem != null)
+            if (controller.IsEmpty())
             {
-                // Get selected item
-                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
-
-                // Show dialog
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete '{selectedItem.Name}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                // Check dialog result
-                if (result == MessageBoxResult.Yes)
-                {
-                    // Delete item if user confirm
-                    DeleteMediaItem(selectedItem);
-                }
+                ShowErrorDialog("Movie list is empty.");
+                return;
             }
-            else
+            if (dataGrid.SelectedItem == null)
             {
-                MessageBox.Show("Select an item to delete.");
+                ShowErrorDialog("Select movie to delete.");
+                return;
+            }
+
+            // Get selected item
+            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+
+            // Show dialog
+            bool result = ShowConfirmationDialog($"Are you sure you want to delete '{selectedItem.Name}'?");
+            // Check dialog result
+            if (result)
+            {
+                // Delete item if user confirm
+                DeleteMediaItem(selectedItem);
             }
 
         }
@@ -121,100 +119,133 @@ namespace Medias
 
         private void EditMediaItem()
         {
-            if (dataGrid.SelectedItem != null)
+            if (dataGrid.SelectedItem == null)
             {
-                MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
-
-                //MessageBox.Show($"Edit item clicked.\nItem={selectedItem.ToString()}");
-
-                if (selectedItem is Movie) EditMovieItem(selectedItem);
-                else if (selectedItem is Series) EditSeriesItem(selectedItem);
-                else MessageBox.Show("Error: selected item is not movie or series");
-
+                ShowErrorDialog("Select movie to edit.");
+                return;
             }
-            else MessageBox.Show("Select item to edit.");
+
+            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+
+            if (selectedItem is Movie) EditMovieItem(selectedItem);
+            else if (selectedItem is Series) EditSeriesItem(selectedItem);
+            else ShowErrorDialog("Edit movie error.");
+
         }
 
         private void EditMovieItem(MediaItem selectedItem)
         {
-            var editMovieWindow = new AddMovie((Movie)selectedItem);
+            Movie selectedMovie = (Movie)selectedItem;
+            var editMovieWindow = new AddMovie(selectedMovie);
             editMovieWindow.ShowDialog();
-            MediaItem mi = editMovieWindow.NewMovie;
+            MediaItem editedMovie = editMovieWindow.NewMovie;
 
-            bool itemsEqual = selectedItem.Equals(editMovieWindow.NewMovie);
+            controller.EditMovie(editedMovie);
+            LoadMoviesToDataGrid();
 
-            //if (!mi.Equals(editMovieWindow.NewMovie)) 
-            if (!itemsEqual)
-            {
-                //MessageBox.Show("!selectedItem.Equals(editMovieWindow.NewMovie)");
-                controller.EditMovie(mi);
-                LoadMoviesToDataGrid();
-            }
 
         }
 
         private void EditSeriesItem(MediaItem selectedItem)
         {
-            //var editSeriesWindow = new AddSeries((Series)selectedItem);
-            //editSeriesWindow.ShowDialog();
-            //Series mi = editSeriesWindow.NewMovie;
+            Series selectedSeries = (Series)selectedItem;
+            var editSeriesWindow = new AddSeries(selectedSeries);
+            editSeriesWindow.ShowDialog();
+            Series editedSeries = editSeriesWindow.NewMovie;
 
-            //bool itemsEqual = selectedItem.Equals(mi);
+            controller.EditMovie(editedSeries);
+            LoadMoviesToDataGrid();
 
-            ////if (!mi.Equals(editMovieWindow.NewMovie)) 
-            //if (!itemsEqual)
-            //{
-            //    MessageBox.Show($"new item:= {mi.ToString()}");
-            //    controller.EditMovie(mi);
-            //    LoadMoviesToDataGrid();
-            //}
-            MessageBox.Show("Edit series was clicked.");
+
 
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Save was clicked");
+            if (controller.IsEmpty())
+            {
+                ShowErrorDialog("Movie list is empty.");
+                return;
+            }
+
+            // Create a dialog box for selecting a save file
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Фильтр для файлов
+            saveFileDialog.DefaultExt = ".dat"; // Расширение файла по умолчанию
+
+            // Open the dialog box and get the result
+            bool? result = saveFileDialog.ShowDialog();
+
+            // Checking whether the file was selected and whether the "Save" button was clicked
+            if (result == true)
+            {
+                // Getting the path to the selected file
+                string filePath = saveFileDialog.FileName;
+
+                try
+                {
+                    Serializer.SaveToFile(controller.Movies, filePath);
+                    MessageBox.Show($"Data will be saved to: {filePath}");
+                }
+                catch (IOException ex)
+                {
+                    ShowErrorDialog(ex.Message);
+                }
+
+            }
         }
         private void Load_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Load was clicked");
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Фильтр для файлов
+
+            // Open the dialog box and get the result
+            bool? result = openFileDialog.ShowDialog();
+
+            // Checking whether the file was selected and whether the "Open" button was clicked
+            if (result == true)
+            {
+                // Getting the path to the selected file
+                string filePath = openFileDialog.FileName;
+
+                try
+                {
+                    List<MediaItem> readedItems = Deserializer.ReadFile(filePath);
+
+                    // Clear existing data
+                    controller = new(readedItems);
+
+                    LoadMoviesToDataGrid();
+                    MessageBox.Show($"Data loaded from: {filePath}");
+                }
+                catch (IOException ex)
+                {
+                    ShowErrorDialog(ex.Message);
+                }
+            }
 
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-
-
-
-            if (!controller.IsEmpty())
+            if (controller.IsEmpty())
             {
-
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete all items?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                // Check dialog result
-                if (result == MessageBoxResult.Yes)
-                {
-                    // Delete item if user confirm
-                    controller.ClearAll();
-                    LoadMoviesToDataGrid();
-                }
-
-
+                ShowErrorDialog("Movie list is empty.");
+                return;
             }
-            else MessageBox.Show("Movie list is empty.");
+
+            bool result = ShowConfirmationDialog($"Are you sure you want to delete all items?");
+
+            // Check dialog result
+            if (result)
+            {
+                // Delete item if user confirm
+                controller.ClearAll();
+                LoadMoviesToDataGrid();
+            }
 
         }
-        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("DataGrid_MouseDoubleClicked");
-            if (sender is DataGrid dataGrid)
-            {
-                if (dataGrid.SelectedItem != null)
-                {
-                    dataGrid.BeginEdit();
-                }
-            }
-        }
+
 
         private void AddMediaItem(MediaItem mediaItem)
         {
@@ -253,6 +284,14 @@ namespace Medias
             }
         }
 
-
+        private void ShowErrorDialog(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private bool ShowConfirmationDialog(string message)
+        {
+            MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
+        }
     }
 }

@@ -21,12 +21,18 @@ namespace Medias.Controller
 
         public SeasonsController(List<Season> seasons)
         {
-            Seasons = seasons;
-            if (Seasons.Any()) maxId = Seasons.Max(season => season.Id);
-            else maxId = 0;
+            if (seasons.Count != 0)
+            {
+                Seasons = seasons;
+                if (Seasons.Any()) maxId = Seasons.Max(season => season.Id);
+                else maxId = 0;
+            }
+            else Seasons = new();
         }
 
         public bool IsEmpty() { return Seasons.Count == 0; }
+
+        public int Count () { return Seasons.Count; }
 
         public void AddSeason(Season season)
         {

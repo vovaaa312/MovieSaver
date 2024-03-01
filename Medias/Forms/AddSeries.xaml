@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Medias.Forms"
         mc:Ignorable="d"  Title="AddSeries"  
         WindowStartupLocation="CenterScreen"
-        Height="350" Width="660"
-        MinHeight="350" MinWidth="660"
+        Height="350" Width="710"
+        MinHeight="350" MinWidth="710"
         MaxHeight="720" MaxWidth="1280">
     <Grid Margin="5">
 
@@ -295,7 +295,7 @@
             </Grid>
 
             <Grid Grid.Row="1">
-                <Button Height="20" Width="350px" Content="Save" Click="Save_Click"/>
+                <Button FontSize="13"  VerticalAlignment="Center" Width="350px" Content="Save" Click="Save_Click"/>
             </Grid>
 
         </Grid>

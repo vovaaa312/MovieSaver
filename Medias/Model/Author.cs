@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace MovieSaver.Model
 {
+    [Serializable]
+
     public class Author
     {
         public string Name { get; set; }

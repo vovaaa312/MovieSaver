@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Medias.Model
 {
+    [Serializable]
+
     public class Season
     {
         public int Id { get; set; }

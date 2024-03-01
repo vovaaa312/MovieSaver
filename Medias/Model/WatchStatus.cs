@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace MovieSaver.Model
 {
+    [Serializable]
+
     public enum WatchStatus
     {
         WATCHING, WATCHED, NOT_WATCHED, NotSelected

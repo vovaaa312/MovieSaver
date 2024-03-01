@@ -30,7 +30,6 @@ namespace Medias.Forms
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
             comboStatus.SelectedItem = WatchStatus.NotSelected;
-
         }
         public AddMovie(Movie movie)
         {
@@ -50,89 +49,94 @@ namespace Medias.Forms
             LoadAuthorsToList();
 
         }
-
         private void AddGenre_Click(object sender, RoutedEventArgs e)
         {
 
-            if (GenresComboBox.SelectedItem != null)
+            ComboBoxItem selectedItem = (ComboBoxItem)GenresComboBox.SelectedItem;
+
+            if (selectedItem == null)
             {
-                ComboBoxItem selectedItem = (ComboBoxItem)GenresComboBox.SelectedItem;
-                string genreName = selectedItem.Content.ToString();
-                if (!GenresList.Any(g => g.Name == genreName))  // if selected genre not in the list...
-                {
-                    //then add new genre to list
-                    GenresList.Add(new Genre(genreName));
-                    //update list
-                    LoadGenresToList();
-                }
-                else
-                {
-                    MessageBox.Show("This genre already exists in the list.");
-                }
-
+                ShowErrorDialog("Select a genre from the dropdown list.");
+                return;
             }
-        }
 
+            string genreName = selectedItem.Content.ToString();
+            if (GenresList.Any(g => g.Name == genreName))
+            {
+                ShowErrorDialog($"Genre '{genreName}' already  in the list.");
+                return;
+            }
+
+            //add new genre to list
+            GenresList.Add(new Genre(genreName));
+            //update list
+            LoadGenresToList();
+        }
         private void DeleteGenre_Click(object sender, RoutedEventArgs e)
         {
+            if (GenresList.Count == 0)
+            {
+                ShowErrorDialog("Genre list is empty.");
+                return;
+            }
+            if (GenresListBox.SelectedItem == null)
+            {
+                ShowErrorDialog("Select a genre to delete.");
+                return;
+            }
             if (GenresList.Count == 1)
             {
-                MessageBox.Show("Error: movie must have at least 1 genre.");
+                ShowErrorDialog("Movie must have at least 1 genre.");
+                return;
             }
-            else
-            {
-                if (GenresListBox.SelectedItem != null)
-                {
-                    string selectedGenre = (string)GenresListBox.SelectedItem;
-                    GenresList.RemoveAll(g => g.Name == selectedGenre);
-                    LoadGenresToList();
-                }
-                else
-                {
-                    MessageBox.Show("Please select a genre to delete.");
-                }
-            }
-
+            string selectedGenre = (string)GenresListBox.SelectedItem;
+            GenresList.RemoveAll(g => g.Name == selectedGenre);
+            LoadGenresToList();
         }
-
-
-
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
             string authName = AuthorNameTextBox.Text;
-            if (authName.Length > 0)
+            if (!(authName.Length > 0))
             {
-                Author auth = new(authName);
-
-                if (!AuthorsList.Any(g => g.Name == authName))  // if new author not in the list...
-                {
-                    //then add new author to list
-                    AuthorsList.Add(auth);
-                    //update list
-                    LoadAuthorsToList();
-                }
-                else
-                {
-                    MessageBox.Show("This author already exists in the list.");
-                }
-
+                ShowErrorDialog("Enter author name.");
+                return;
             }
-            else MessageBox.Show("Enter author name.");
 
+            if (AuthorsList.Any(g => g.Name == authName))
+            {
+                ShowErrorDialog($"Autor '{authName}' already in the list.");
+                return;
+            }
+
+            Author auth = new(authName);
+            // add new author to list
+            AuthorsList.Add(auth);
+            //update list
+            LoadAuthorsToList();
+            //clear text box
+            AuthorNameTextBox.Clear();
         }
-
         private void DeleteAuthor_Click(object sender, RoutedEventArgs e)
         {
-            if (AuthorsListBox.SelectedItem != null)
+            if (AuthorsList.Count == 0)
             {
-                string selectedAuthor = (string)AuthorsListBox.SelectedItem;
-                AuthorsList.RemoveAll(g => g.Name == selectedAuthor);
-                LoadAuthorsToList();
+                ShowErrorDialog("Author list is empty.");
+                return;
             }
-            else
+            if (AuthorsListBox.SelectedItem == null)
             {
-                MessageBox.Show("Please select a author to delete.");
+                ShowErrorDialog("Select author to delete.");
+                return;
             }
+            if (AuthorsList.Count == 1)
+            {
+                ShowErrorDialog("Movie must have at least 1 author.");
+                return;
+            }
+
+            string selectedAuthor = (string)AuthorsListBox.SelectedItem;
+            AuthorsList.RemoveAll(g => g.Name == selectedAuthor);
+            LoadAuthorsToList();
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
@@ -141,29 +145,36 @@ namespace Medias.Forms
 
             string movieName = txtName.Text;
             string description = txtDescription.Text;
-            WatchStatus statusSelected = (WatchStatus)comboStatus.SelectedItem;
-            TimeSpan movieLength = TimeSpan.FromMinutes(length); // Преобразуем в TimeSpan
+            WatchStatus watchStatus = (WatchStatus)comboStatus.SelectedItem;
+             // Преобразуем в TimeSpan
+            string movieLength = txtMovieLength.Text;
+            List<Genre>? genres = GenresList;
+            List<Author>? authors = AuthorsList;
 
             string message = CheckFields(
-                txtName.Text,
-                txtDescription.Text,
-                GenresList,
-                AuthorsList,
-                comboStatus.SelectedItem,
-                txtMovieLength.Text
+                movieName,
+                description,
+                genres,
+                authors,
+                watchStatus,
+                movieLength
                 );
 
-            if (message.Length == 0)
+
+            if (message.Length != 0)
             {
-                int id = 0;
-                if (NewMovie != null) id = NewMovie.Id;
-
-                NewMovie = new Movie(id, movieName, description, GenresList, AuthorsList, statusSelected, movieLength);
-                //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
-                Close();
-
+                ShowErrorDialog(message);
+                return;
             }
-            else MessageBox.Show($"Errors: \n\n{message}");
+
+
+            int id = 0;
+            if (NewMovie != null) id = NewMovie.Id;
+            TimeSpan movieLengthTS = TimeSpan.FromMinutes(length);
+            NewMovie = new Movie(id, movieName, description, genres, authors, watchStatus, movieLengthTS);
+            Close();
+
+
         }
         private void LoadGenresToList()
         {
@@ -181,9 +192,6 @@ namespace Medias.Forms
                 AuthorsListBox.Items.Add(g.Name);
             }
         }
-
-
-
         private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtMovieLength)
         {
             StringBuilder sb = new();
@@ -201,6 +209,15 @@ namespace Medias.Forms
             if (!res || a <= 0) sb.Append($"Wrong movie length value: {txtMovieLength}").Append("\n");
 
             return sb.ToString();
+        }
+        private void ShowErrorDialog(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private bool ShowConfirmationDialog(string message)
+        {
+            MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
         }
     }
 }
