@@ -8,93 +8,133 @@
         Title="AddMovie" 
         WindowStartupLocation="CenterScreen"
 
-         Height="350" Width="710"
- MinHeight="350" MinWidth="710"
- MaxHeight="720" MaxWidth="1280">
+        Height="350" Width="840"
+        MinHeight="350" MinWidth="840"
+        MaxHeight="720" MaxWidth="1280">
 
-    <Grid Margin="3">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="90*"/>
-                <RowDefinition Height="10*"/>
-            </Grid.RowDefinitions>
+    <Grid Margin="5">
+     
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
 
-                <!--Left column-->
-                <Grid Grid.Column="0" Margin="1">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="50*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Grid for first column-->
+            <Grid Grid.Column="0" Margin="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="60*"/>
+                </Grid.RowDefinitions>
+
+                <!--Name and status grid-->
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition MinHeight="120px"/>
-
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
                     </Grid.RowDefinitions>
 
-                    <Label    Grid.Row="0" Content="Name:"/>
-                    <TextBox  Grid.Row="1" Margin="1" x:Name="txtName"/>
 
-                    <Label    Grid.Row="2" Content="Description:"/>
-                    <TextBox  Grid.Row="3" Margin="1" x:Name="txtDescription"/>
+                    <Label   Grid.Row="0" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="1" x:Name="txtName"/>
 
-                    <Label    Grid.Row="4" Content="Genres:"/>
-                    <Grid Grid.Row="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="70*"/>
-                            <ColumnDefinition Width="30*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <ListBox Grid.Column="0" x:Name="GenresListBox" Margin="1" />
-                        <Grid Grid.Column="1" Margin="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <ComboBox Grid.Row="0" Height="30"  VerticalAlignment="Top"   x:Name="GenresComboBox"   >
-                                <ComboBoxItem>Action</ComboBoxItem>
-                                <ComboBoxItem>Comedy</ComboBoxItem>
-                                <ComboBoxItem>Drama</ComboBoxItem>
-                                <ComboBoxItem>Fantasy</ComboBoxItem>
-                                <ComboBoxItem>Horror</ComboBoxItem>
-                                <ComboBoxItem>Mystery</ComboBoxItem>
-                                <ComboBoxItem>Romance</ComboBoxItem>
-                                <ComboBoxItem>Thriller</ComboBoxItem>
-                            </ComboBox>
-                            <Button Grid.Row="1" Content="+"  FontSize="15" Height="30" VerticalAlignment="Center"      Click="AddGenre_Click"/>
-                            <Button Grid.Row="2" Content="-" FontSize="20" Height="30" VerticalAlignment="Bottom"  Click="DeleteGenre_Click"/>
-
-                        </Grid>
-                    </Grid>
+                    <Label Grid.Row="2"  Content="Status:"/>
+                    <ComboBox  Grid.Row="3"  Margin="1" x:Name="comboStatus"/>
                 </Grid>
 
-                <!--Right column-->
-                <Grid Grid.Column="1" Margin="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition MinHeight="120px"/>
+                <!--Genres grid-->
+                <Grid Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20*"/>
+                            <RowDefinition Height="80*"/>
+                        </Grid.RowDefinitions>
 
+                        <Grid Grid.Row="0">
+                            <Label Content="Genres:"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70*"/>
+                                <ColumnDefinition Width="30*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ListBox x:Name="GenresListBox" Margin="1" Grid.Column="0">
+
+                            </ListBox>
+                            <Grid Grid.Column="1" Margin="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <ComboBox Grid.Row="0" Margin="0,0,0,10"   x:Name="GenresComboBox"   >
+                                    <ComboBoxItem>Action</ComboBoxItem>
+                                    <ComboBoxItem>Comedy</ComboBoxItem>
+                                    <ComboBoxItem>Drama</ComboBoxItem>
+                                    <ComboBoxItem>Fantasy</ComboBoxItem>
+                                    <ComboBoxItem>Horror</ComboBoxItem>
+                                    <ComboBoxItem>Mystery</ComboBoxItem>
+                                    <ComboBoxItem>Romance</ComboBoxItem>
+                                    <ComboBoxItem>Thriller</ComboBoxItem>
+                                </ComboBox>
+                                <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13"     Click="AddGenre_Click"/>
+                                <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete"  FontSize="13"    Click="DeleteGenre_Click"/>
+
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+
+            </Grid>
+            
+            <!--Grid for second column-->
+            <Grid Grid.Column="1" Margin="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="60*"/>
+                </Grid.RowDefinitions>
+
+                <!--Description and length grid-->
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  Content="Status:"/>
-                    <ComboBox  Grid.Row="1"  Margin="1" x:Name="comboStatus"/>
+                    <Label  Grid.Row="0" Content="Description:"/>
+                    <TextBox  Grid.Row="1" Margin="1" x:Name="txtDescription"/>
 
                     <Label Grid.Row="2"  Content="Movie Length:"/>
                     <TextBox Grid.Row="3"  Margin="1" x:Name="txtMovieLength"/>
+                </Grid>
 
-                    <Label Grid.Row="4"  Content="Authors:"/>
-                    <Grid Grid.Row="5">
+                <!--Authors  grid-->
+                <Grid Grid.Row="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="80*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <Grid Grid.Row="0">
+                        <Label Content="Authors:"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="70*"/>
                             <ColumnDefinition Width="30*"/>
@@ -107,25 +147,17 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBox Grid.Row="0"  Height="30"  VerticalAlignment="Top" x:Name="AuthorNameTextBox"  ></TextBox>
-                            <Button Grid.Row="1"  Content="+"  FontSize="15" Height="30" VerticalAlignment="Center"  Click="AddAuthor_Click"/>
-                            <Button Grid.Row="2" Content="-" FontSize="20" Height="30" VerticalAlignment="Bottom" Click="DeleteAuthor_Click"/>
+                            <TextBox Grid.Row="0" Margin="0,0,0,10"  x:Name="AuthorNameTextBox"  ></TextBox>
+                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddAuthor_Click"/>
+                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteAuthor_Click"/>
 
                         </Grid>
                     </Grid>
-
                 </Grid>
-
-            </Grid>
-
-
-
-            <Grid Grid.Row="1">
-                <Button Width="350px" Content="Save" Click="Save_Click"/>
             </Grid>
         </Grid>
-
-
+        
+        <Button Grid.Row="1" Margin="100,1,100,1" FontSize="13" Content="Save" Click="Save_Click"/>
 
     </Grid>
 </Window>

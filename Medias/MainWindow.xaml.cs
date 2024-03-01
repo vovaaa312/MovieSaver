@@ -1,5 +1,6 @@
 ﻿using Medias.Forms;
 using Medias.MediaIO;
+using Medias.Model.Enum;
 using MovieSaver.Controller;
 using MovieSaver.Model;
 using System.Collections.ObjectModel;
@@ -24,26 +25,27 @@ namespace Medias
     public partial class MainWindow : Window
     {
         private MovieController controller;
+        private List<Genre> genres = new();
         public MainWindow()
         {
             controller = new MovieController();
 
-            controller.AddMovie(
-                new Movie(
-                    0,
-                    "Movie1",
-                    "Good movie",
-                    new List<Genre>() {
-                new Genre("action"),new Genre("comedy")
-                                        },
-                    new List<Author>()
-                                        {
-                new Author("John Doe")
-                                        },
-                    WatchStatus.WATCHED,
-                    TimeSpan.FromMinutes(120)
+            //controller.AddMovie(
+            //    new Movie(
+            //        0,
+            //        "Movie1",
+            //        "Good movie",
+            //        new List<Genre>() {
+            //    new Genre("action"),new Genre("comedy")
+            //                            },
+            //        new List<Author>()
+            //                            {
+            //    new Author("John Doe")
+            //                            },
+            //        WatchStatus.WATCHED,
+            //        TimeSpan.FromMinutes(120)
 
-                    ));
+            //        ));
 
             //   controller.AddMovie(
             //    new Series(
@@ -63,7 +65,8 @@ namespace Medias
             //));
 
             InitializeComponent();
-            // dataGrid.ItemsSource = new ObservableCollection<MediaItem>();
+            MovieTypeComboBox.ItemsSource = Enum.GetValues(typeof(MovieType));
+            MovieTypeComboBox.SelectedItem = MovieType.ANY;
 
             LoadMoviesToDataGrid();
 
@@ -85,82 +88,18 @@ namespace Medias
         {
             DeleteMediaItem();
         }
-        private void DeleteMediaItem()
-        {
-            if (controller.IsEmpty())
-            {
-                ShowErrorDialog("Movie list is empty.");
-                return;
-            }
-            if (dataGrid.SelectedItem == null)
-            {
-                ShowErrorDialog("Select movie to delete.");
-                return;
-            }
-
-            // Get selected item
-            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
-
-            // Show dialog
-            bool result = ShowConfirmationDialog($"Are you sure you want to delete '{selectedItem.Name}'?");
-            // Check dialog result
-            if (result)
-            {
-                // Delete item if user confirm
-                DeleteMediaItem(selectedItem);
-            }
-
-        }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
             EditMediaItem();
         }
 
-        private void EditMediaItem()
-        {
-            if (dataGrid.SelectedItem == null)
-            {
-                ShowErrorDialog("Select movie to edit.");
-                return;
-            }
-
-            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
-
-            if (selectedItem is Movie) EditMovieItem(selectedItem);
-            else if (selectedItem is Series) EditSeriesItem(selectedItem);
-            else ShowErrorDialog("Edit movie error.");
-
-        }
-
-        private void EditMovieItem(MediaItem selectedItem)
-        {
-            Movie selectedMovie = (Movie)selectedItem;
-            var editMovieWindow = new AddMovie(selectedMovie);
-            editMovieWindow.ShowDialog();
-            MediaItem editedMovie = editMovieWindow.NewMovie;
-
-            controller.EditMovie(editedMovie);
-            LoadMoviesToDataGrid();
-
-
-        }
-
-        private void EditSeriesItem(MediaItem selectedItem)
-        {
-            Series selectedSeries = (Series)selectedItem;
-            var editSeriesWindow = new AddSeries(selectedSeries);
-            editSeriesWindow.ShowDialog();
-            Series editedSeries = editSeriesWindow.NewMovie;
-
-            controller.EditMovie(editedSeries);
-            LoadMoviesToDataGrid();
-
-
-
-        }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            Save();
+        }
+
+        private void Save() {
             if (controller.IsEmpty())
             {
                 ShowErrorDialog("Movie list is empty.");
@@ -195,9 +134,9 @@ namespace Medias
         }
         private void Load_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Load was clicked");
+
             var openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Фильтр для файлов
+            openFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Filter for files
 
             // Open the dialog box and get the result
             bool? result = openFileDialog.ShowDialog();
@@ -216,7 +155,6 @@ namespace Medias
                     controller = new(readedItems);
 
                     LoadMoviesToDataGrid();
-                    MessageBox.Show($"Data loaded from: {filePath}");
                 }
                 catch (IOException ex)
                 {
@@ -225,7 +163,6 @@ namespace Medias
             }
 
         }
-
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             if (controller.IsEmpty())
@@ -245,32 +182,6 @@ namespace Medias
             }
 
         }
-
-
-        private void AddMediaItem(MediaItem mediaItem)
-        {
-            controller.AddMovie(mediaItem);
-            LoadMoviesToDataGrid();
-        }
-        private void DeleteMediaItem(MediaItem selectedItem)
-        {
-            controller.DeleteMovie(selectedItem);
-            LoadMoviesToDataGrid();
-        }
-        private void LoadMoviesToDataGrid()
-        {
-
-            dataGrid.ItemsSource = new ObservableCollection<MediaItem>(controller.Movies);
-
-
-            //foreach (var movie in controller.Movies)
-            //{
-            //    dataGrid.Items.Add(movie);
-            //}
-
-        }
-
-
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is DataGrid grid && grid.SelectedItem != null)
@@ -284,6 +195,241 @@ namespace Medias
             }
         }
 
+        private void ActionCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Action"));
+            LoadMoviesToDataGrid();
+        }
+        private void ComedyCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Comedy"));
+            LoadMoviesToDataGrid();
+
+
+        }
+        private void DramaCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Drama"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void FantasyCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Fantasy"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void HorrorCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Horror"));
+            LoadMoviesToDataGrid();
+        }
+        private void MysteryCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Mystery"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void RomanceCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Romance"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void ThrillerCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genres.Add(new Genre("Thriller"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void ActionCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Action"));
+            LoadMoviesToDataGrid();
+        }
+        private void ComedyCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Comedy"));
+            LoadMoviesToDataGrid();
+
+
+        }
+        private void DramaCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Drama"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void FantasyCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Fantasy"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void HorrorCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Horror"));
+            LoadMoviesToDataGrid();
+        }
+        private void MysteryCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Mystery"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void RomanceCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Romance"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void ThrillerCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genres.Remove(new Genre("Thriller"));
+            LoadMoviesToDataGrid();
+
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //// Ваш код обработки действий при закрытии приложения
+            //// Например, сохранение данных или выполнение других завершающих действий
+            //bool confirm = ShowConfirmationDialog("Do you want save changes?");
+            //if (confirm) 
+            //{
+            //    Save();
+            //}
+
+            bool? confirm = ShowConfirmationCancelDialog("Do you want save changes?");
+            if (confirm.HasValue) // Проверяем, была ли нажата кнопка "Да" или "Нет"
+            {
+                if (confirm == true)
+                {
+                    Save();
+                }
+                // В случае нажатия "Отмена" не делаем ничего, оставляем окно открытым
+            }
+            else // Если была нажата кнопка "Отмена"
+            {
+                e.Cancel = true; // Отменяем закрытие окна
+            }
+        }
+
+
+        //private void LoadMoviesToDataGrid()
+        //{
+
+        //    dataGrid.ItemsSource = new ObservableCollection<MediaItem>(controller.Movies);
+
+        //}
+
+        private void LoadMoviesToDataGrid()
+        {
+            List<MediaItem> filteredItems = new List<MediaItem>();
+
+            // Filter movies by selected genres
+            if (genres.Count > 0)
+            {
+                foreach (MediaItem item in controller.Movies)
+                {
+                    bool containsAllGenres = true;
+                    foreach (Genre genre in genres)
+                    {
+                        if (!item.Genres.Contains(genre))
+                        {
+                            containsAllGenres = false;
+                            break;
+                        }
+                    }
+                    if (containsAllGenres)
+                    {
+                        filteredItems.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                filteredItems.AddRange(controller.Movies);
+            }
+
+            dataGrid.ItemsSource = new ObservableCollection<MediaItem>(filteredItems);
+        }
+
+        private void AddMediaItem(MediaItem mediaItem)
+        {
+            controller.AddMovie(mediaItem);
+            LoadMoviesToDataGrid();
+        }
+        private void DeleteMediaItem()
+        {
+            if (controller.IsEmpty())
+            {
+                ShowErrorDialog("Movie list is empty.");
+                return;
+            }
+            if (dataGrid.SelectedItem == null)
+            {
+                ShowErrorDialog("Select movie to delete.");
+                return;
+            }
+
+            // Get selected item
+            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+
+            // Show dialog
+            bool result = ShowConfirmationDialog($"Are you sure you want to delete '{selectedItem.Name}'?");
+            // Check dialog result
+            if (result)
+            {
+                // Delete item if user confirm
+                DeleteMediaItem(selectedItem);
+            }
+
+        }
+        private void DeleteMediaItem(MediaItem selectedItem)
+        {
+            controller.DeleteMovie(selectedItem);
+            LoadMoviesToDataGrid();
+        }
+        private void EditMediaItem()
+        {
+            if (dataGrid.SelectedItem == null)
+            {
+                ShowErrorDialog("Select movie to edit.");
+                return;
+            }
+
+            MediaItem selectedItem = (MediaItem)dataGrid.SelectedItem;
+
+            if (selectedItem is Movie) EditMovieItem(selectedItem);
+            else if (selectedItem is Series) EditSeriesItem(selectedItem);
+            else ShowErrorDialog("Edit movie error.");
+
+        }
+        private void EditMovieItem(MediaItem selectedItem)
+        {
+            Movie selectedMovie = (Movie)selectedItem;
+            var editMovieWindow = new AddMovie(selectedMovie);
+            editMovieWindow.ShowDialog();
+            MediaItem editedMovie = editMovieWindow.NewMovie;
+
+            controller.EditMovie(editedMovie);
+            LoadMoviesToDataGrid();
+
+
+        }
+        private void EditSeriesItem(MediaItem selectedItem)
+        {
+            Series selectedSeries = (Series)selectedItem;
+            var editSeriesWindow = new AddSeries(selectedSeries);
+            editSeriesWindow.ShowDialog();
+            Series editedSeries = editSeriesWindow.NewMovie;
+
+            controller.EditMovie(editedSeries);
+            LoadMoviesToDataGrid();
+
+
+
+        }
         private void ShowErrorDialog(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -293,5 +439,24 @@ namespace Medias
             MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
         }
+
+        private bool? ShowConfirmationCancelDialog(string message)
+        {
+            MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                return true;
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                return false;
+            }
+            else // Если пользователь нажал "Отмена"
+            {
+                return null;
+            }
+        }
+
     }
 }

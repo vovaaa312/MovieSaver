@@ -1,4 +1,5 @@
-﻿using MovieSaver.Model;
+﻿using Medias.Model.Enum;
+using MovieSaver.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

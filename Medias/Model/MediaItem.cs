@@ -1,4 +1,5 @@
 ﻿using Medias.Model;
+using Medias.Model.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

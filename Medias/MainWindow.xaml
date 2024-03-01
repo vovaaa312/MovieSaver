@@ -7,20 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" 
         WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing"
+        
         Height="700" Width="1200"
         MinHeight="700" MinWidth="1200"
-        MaxHeight="900" MaxWidth="1600">
+        MaxHeight="1080" MaxWidth="1920">
 
-    <Grid Margin="2">
+    <Grid Margin="5">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="75*"/>
-            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="20*"/>
 
         </Grid.ColumnDefinitions>
 
-
-        <Grid Margin="5" Grid.Column="0">
+        <!--Grid for first column-->
+        <Grid  Grid.Column="0" Margin="1">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
@@ -35,32 +37,34 @@
                     <ColumnDefinition Width="25*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="SearchTextBox" Grid.Column="0" Text="Search..."  FontSize="16"/>
-                <ComboBox x:Name="MovieTypeComboBox" Grid.Column="1" FontSize="16"/>
+                <TextBox Margin="0,0,1,0" x:Name="SearchTextBox" Grid.Column="0" Text="Search..."  FontSize="16"/>
+                <ComboBox Margin="1,0,0,0" x:Name="MovieTypeComboBox"  Grid.Column="1" FontSize="16">
+
+                </ComboBox>
 
             </Grid>
 
-            <DataGrid Grid.Row="1" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="0,5,0,0"  x:Name="dataGrid" FontSize="16" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
+            <DataGrid  Grid.Row="1" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="0,5,0,0"  x:Name="dataGrid" FontSize="16" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
                 <DataGrid.Columns>
 
-                    <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Description" Width="300" Binding="{Binding Description}"/>
-                    <DataGridTemplateColumn Header="Genres" Width="250">
+                    <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Description" Width="300" Binding="{Binding Description}" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="Genres" Width="250" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding GenresString}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Authors" Width="250">
+                    <DataGridTemplateColumn Header="Authors" Width="250" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding AuthorsString}" />
+                                <TextBlock Text="{Binding AuthorsString}"  />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Time" Width="100" Binding="{Binding DurationToString}"/>
-                    <DataGridTextColumn Header="Status" Width="150" Binding="{Binding Status}"/>
+                    <DataGridTextColumn Header="Time" Width="100" Binding="{Binding DurationToString}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Status" Width="150" Binding="{Binding Status}" IsReadOnly="True"/>
 
                 </DataGrid.Columns>
             </DataGrid>
@@ -104,49 +108,48 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="25*"/>
-            </Grid.ColumnDefinitions>
-
+        <!--Grid for second column-->
+        <Grid Grid.Column="1" Margin="1">
             <Grid.RowDefinitions>
-                <RowDefinition  Height="*"/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="90*"/>
+                <RowDefinition Height="5*"/>
 
             </Grid.RowDefinitions>
 
+            <Button Grid.Row="0" Content="Clear filter" FontSize="16"></Button>
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
+                <CheckBox Grid.Row="0" Checked="ActionCheckBox_Checked"  Unchecked="ActionCheckBox_Unchecked"  Content="Action"     x:Name="ActionCheckBox"></CheckBox>
+                <CheckBox Grid.Row="1" Checked="ComedyCheckBox_Checked"  Unchecked="ComedyCheckBox_Unchecked"  Content="Comedy"     x:Name="ComedyCheckBox"></CheckBox>
+                <CheckBox Grid.Row="2" Checked="DramaCheckBox_Checked"   Unchecked="DramaCheckBox_Unchecked"  Content="Drama"      x:Name="DramaCheckBox"></CheckBox>
+                <CheckBox Grid.Row="3" Checked="FantasyCheckBox_Checked" Unchecked="FantasyCheckBox_Unchecked"  Content="Fantasy"    x:Name="FantasyCheckBox"></CheckBox>
+                <CheckBox Grid.Row="4" Checked="HorrorCheckBox_Checked"  Unchecked="HorrorCheckBox_Unchecked"  Content="Horror"     x:Name="HorrorCheckBox"></CheckBox>
+                <CheckBox Grid.Row="5" Checked="MysteryCheckBox_Checked" Unchecked="MysteryCheckBox_Unchecked"  Content="Mystery"    x:Name="MysteryCheckBox"></CheckBox>
+                <CheckBox Grid.Row="6" Checked="RomanceCheckBox_Checked"    Unchecked="RomanceCheckBox_Unchecked"  Content="Romance"    x:Name="RomanceCheckBox"></CheckBox>
+                <CheckBox Grid.Row="7" Checked="ThrillerCheckBox_Checked" Unchecked="ThrillerCheckBox_Unchecked" Content="Thriller"   x:Name="ThrillerCheckBox"></CheckBox>
 
-
+                <!--<ComboBoxItem>Action</ComboBoxItem>
+                <ComboBoxItem>Comedy</ComboBoxItem>
+                <ComboBoxItem>Drama</ComboBoxItem>
+                <ComboBoxItem>Fantasy</ComboBoxItem>
+                <ComboBoxItem>Horror</ComboBoxItem>
+                <ComboBoxItem>Mystery</ComboBoxItem>
+                <ComboBoxItem>Romance</ComboBoxItem>
+                <ComboBoxItem>Thriller</ComboBoxItem>-->
+            </Grid>
         </Grid>
-
-
-        <!--<TextBox HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="988" Height="39" FontSize="16"/>
-        <Button Content="Add" HorizontalAlignment="Left" Margin="1117,43,0,0" VerticalAlignment="Top" Height="38" Width="78" FontSize="16" Click="Add_Click"/>
-        <Button Content="Edit" HorizontalAlignment="Left" Margin="1117,87,0,0" VerticalAlignment="Top" Height="40" Width="78" FontSize="16" Click="Edit_Click"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Margin="1117,131,0,0" VerticalAlignment="Top" Height="40" Width="78" FontSize="16" Click="Delete_Click"/>
-
-        <Button Content="Save" HorizontalAlignment="Left" Margin="1117,565,0,10" Width="78" FontSize="16" Click="Save_Click"/>
-        <Button Content="Load" HorizontalAlignment="Left" Margin="1200,565,0,0" VerticalAlignment="Top" Height="39" Width="78" FontSize="16" Click="Load_Click"/>
-
-        <ComboBox HorizontalAlignment="Left" Margin="993,-1,0,0" VerticalAlignment="Top" Width="119" Height="39"  FontSize="16"/>-->
 
     </Grid>
 

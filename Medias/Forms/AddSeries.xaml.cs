@@ -1,5 +1,6 @@
 ﻿using Medias.Controller;
 using Medias.Model;
+using Medias.Model.Enum;
 using MovieSaver.Model;
 using System;
 using System.Collections.Generic;
@@ -254,22 +255,8 @@ namespace Medias.Forms
             if (NewMovie != null) id = NewMovie.Id;
 
             NewMovie = new Series(id, movieName, description, genres, authors, watchStatus, seasons);
-            //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
             Close();
 
-
-            //if (message.Length == 0)
-            //{
-            //    int id = 0;
-            //    if (NewMovie != null) id = NewMovie.Id;
-
-            //    NewMovie = new Series(id, movieName, description, GenresList, AuthorsList, statusSelected, Convert.ToInt32(episodesCount), movieLength);
-            //    //MessageBox.Show($"private void Save_Click: NewMovie= {NewMovie.ToString()}");
-            //    Close();
-
-            //}
-            //else MessageBox.Show($"Errors: \n\n{message}");
-            MessageBox.Show("Save was clicked");
         }
         private string CheckFields(string txtName, string txtDescription, List<Genre>? genresList, List<Author>? authorsList, List<Season>? seasonsList, object selectedItem)
         {

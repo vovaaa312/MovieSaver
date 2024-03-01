@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Medias.Forms"
         mc:Ignorable="d"  Title="AddSeries"  
         WindowStartupLocation="CenterScreen"
-        Height="350" Width="710"
-        MinHeight="350" MinWidth="710"
+        Height="350" Width="840"
+        MinHeight="350" MinWidth="840"
         MaxHeight="720" MaxWidth="1280">
     <Grid Margin="5">
 
@@ -56,6 +56,8 @@
                                 <RowDefinition Height="80*"/>
                             </Grid.RowDefinitions>
 
+                            
+
                             <Grid Grid.Row="0">
                                 <Label Content="Genres:"/>
                             </Grid>
@@ -75,7 +77,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
-                                    <ComboBox Grid.Row="0" Height="30"  VerticalAlignment="Top"   x:Name="GenresComboBox"   >
+                                    <ComboBox Grid.Row="0" Margin="0,0,0,10"   x:Name="GenresComboBox"   >
                                         <ComboBoxItem>Action</ComboBoxItem>
                                         <ComboBoxItem>Comedy</ComboBoxItem>
                                         <ComboBoxItem>Drama</ComboBoxItem>
@@ -85,8 +87,8 @@
                                         <ComboBoxItem>Romance</ComboBoxItem>
                                         <ComboBoxItem>Thriller</ComboBoxItem>
                                     </ComboBox>
-                                    <Button Grid.Row="1" Content="Add"  FontSize="13" Height="30" VerticalAlignment="Center"      Click="AddGenre_Click"/>
-                                    <Button Grid.Row="2" Content="Delete"  FontSize="13" Height="30" VerticalAlignment="Bottom"  Click="DeleteGenre_Click"/>
+                                    <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13"     Click="AddGenre_Click"/>
+                                    <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete"  FontSize="13"    Click="DeleteGenre_Click"/>
 
                                 </Grid>
                             </Grid>
@@ -128,7 +130,6 @@
 
 
                 <!--Grid for second column-->
-
                 <Grid Grid.Column="1" Margin="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40*"/>
@@ -174,9 +175,9 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <TextBox Grid.Row="0"  Height="30"  VerticalAlignment="Top" x:Name="AuthorNameTextBox"  ></TextBox>
-                                <Button Grid.Row="1"  Content="Add"  FontSize="13" Height="30" VerticalAlignment="Center"  Click="AddAuthor_Click"/>
-                                <Button Grid.Row="2" Content="Delete"  FontSize="13" Height="30" VerticalAlignment="Bottom" Click="DeleteAuthor_Click"/>
+                                <TextBox Grid.Row="0" Margin="0,0,0,10"  x:Name="AuthorNameTextBox"  ></TextBox>
+                                <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddAuthor_Click"/>
+                                <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteAuthor_Click"/>
 
                             </Grid>
                         </Grid>
@@ -244,17 +245,17 @@
                         </Grid.ColumnDefinitions>
 
                         <Label  Grid.Row="0" Grid.Column="0" Content="Season number:"/>
-                        <TextBox Grid.Row="1"  Grid.Column="0" x:Name="txtNumber"></TextBox>
+                        <TextBox Grid.Row="1"  Grid.Column="0"  Margin="1" x:Name="txtNumber"></TextBox>
 
 
                         <Label  Grid.Row="2" Grid.Column="0" Content="Count of episodes:"/>
-                        <TextBox Grid.Row="3"  Grid.Column="0" x:Name="txtEpisodesCount"></TextBox>
+                        <TextBox Grid.Row="3"  Grid.Column="0"  Margin="1" x:Name="txtEpisodesCount"></TextBox>
 
                         <Label  Grid.Row="0" Grid.Column="1" Content="Season name:"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtSeasonName"></TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="1"  Margin="1" x:Name="txtSeasonName"></TextBox>
 
-                        <Label  Grid.Row="2" Grid.Column="1" Margin="0,1,0,1" Content="Season description:"/>
-                        <TextBox Grid.Row="3" Grid.Column="1"  x:Name="txtSeasonDescription"></TextBox>
+                        <Label  Grid.Row="2" Grid.Column="1"  Content="Season description:"/>
+                        <TextBox Grid.Row="3" Grid.Column="1"  Margin="1"  x:Name="txtSeasonDescription"></TextBox>
 
                     </Grid>
                     <!--Bottom half of column-->
@@ -264,7 +265,7 @@
                             <RowDefinition Height="80*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0,1,0,1">
+                        <Grid Grid.Row="0" Margin="1">
                             <Grid.ColumnDefinitions >
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -275,13 +276,13 @@
                             <Button Grid.Column="1" Click="DeleteSeason_Click"  Width="80"  Content="Delete"  FontSize="13"  HorizontalAlignment="Center"  />
                             <Button Grid.Column="2" Click="ClearSeasons_Click"  Width="80"  Content="Clear"  FontSize="13"  HorizontalAlignment="Right"  />
                         </Grid>
-                        <DataGrid Grid.Row="1" x:Name="SeasonsListBox" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid Grid.Row="1"  Margin="1" x:Name="SeasonsListBox" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="№" MinWidth="30" Binding="{Binding Id}"/>
+                                <DataGridTextColumn Header="№" MinWidth="30" Binding="{Binding Id}" IsReadOnly="True"/>
 
-                                <DataGridTextColumn Header="Name" MinWidth="60" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Description" MinWidth="100" Binding="{Binding Description}"/>
-                                <DataGridTextColumn Header="Episodes" MinWidth="70" Binding="{Binding EpisodesCount}"/>
+                                <DataGridTextColumn Header="Name" MinWidth="60" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Description" MinWidth="100" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Episodes" MinWidth="70" Binding="{Binding EpisodesCount}" IsReadOnly="True"/>
 
                             </DataGrid.Columns>
 
@@ -294,9 +295,11 @@
 
             </Grid>
 
-            <Grid Grid.Row="1">
+
+            <Button Grid.Row="1" Margin="100,1,100,1" FontSize="13" Content="Save" Click="Save_Click"/>
+            <!--<Grid Grid.Row="1">
                 <Button FontSize="13"  VerticalAlignment="Center" Width="350px" Content="Save" Click="Save_Click"/>
-            </Grid>
+            </Grid>-->
 
         </Grid>
 
