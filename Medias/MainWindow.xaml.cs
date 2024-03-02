@@ -26,6 +26,8 @@ namespace Medias
     {
         private MovieController controller;
         private List<Genre> genres = new();
+        private ObservableCollection<MediaItem> displayedMovies = new();// Обновленное свойство
+
         public MainWindow()
         {
             controller = new MovieController();
@@ -68,6 +70,7 @@ namespace Medias
             MovieTypeComboBox.ItemsSource = Enum.GetValues(typeof(MovieType));
             MovieTypeComboBox.SelectedItem = MovieType.ANY;
 
+
             LoadMoviesToDataGrid();
 
 
@@ -99,7 +102,8 @@ namespace Medias
             Save();
         }
 
-        private void Save() {
+        private void Save()
+        {
             if (controller.IsEmpty())
             {
                 ShowErrorDialog("Movie list is empty.");
@@ -291,30 +295,29 @@ namespace Medias
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //// Ваш код обработки действий при закрытии приложения
-            //// Например, сохранение данных или выполнение других завершающих действий
-            //bool confirm = ShowConfirmationDialog("Do you want save changes?");
-            //if (confirm) 
-            //{
-            //    Save();
-            //}
+            if (controller.IsEmpty()) return;
 
             bool? confirm = ShowConfirmationCancelDialog("Do you want save changes?");
-            if (confirm.HasValue) // Проверяем, была ли нажата кнопка "Да" или "Нет"
+            if (confirm.HasValue) // Check,if was pressed button "Yes" or "No"
             {
                 if (confirm == true)
                 {
                     Save();
                 }
-                // В случае нажатия "Отмена" не делаем ничего, оставляем окно открытым
+                // If cancel button pressed do nothing
             }
-            else // Если была нажата кнопка "Отмена"
+            else // If cancel button pressed
             {
-                e.Cancel = true; // Отменяем закрытие окна
+                e.Cancel = true; // Cancel window closing
             }
         }
 
-
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Ваш код для обработки изменений в SearchTextBox
+            // Например, можно выполнить поиск и обновить отображаемые данные в DataGrid
+            LoadMoviesToDataGrid();
+        }
         //private void LoadMoviesToDataGrid()
         //{
 
@@ -322,14 +325,135 @@ namespace Medias
 
         //}
 
+        //private void LoadMoviesToDataGrid()
+        //{
+        //    List<MediaItem> nameFilteredItems = new List<MediaItem>();
+        //    string searchText = SearchTextBox.Text.ToLower();
+        //    if (!string.IsNullOrEmpty(searchText))
+        //    {
+        //        foreach (MediaItem item in controller.Movies)
+        //        {
+        //            if (item.Name.ToLower().Contains(searchText))
+        //            {
+        //                nameFilteredItems.Add(item);
+        //            }
+        //        }
+        //    }
+
+
+        //    List<MediaItem> genreFilteredItems = new List<MediaItem>();
+
+        //    List<MediaItem> items = controller.Movies;
+        //    if (nameFilteredItems.Count > 0) items = nameFilteredItems;
+        //    // Filter movies by selected genres
+        //    if (genres.Count > 0)
+        //    {
+        //        foreach (MediaItem item in items)
+        //        {
+        //            bool containsAllGenres = true;
+        //            foreach (Genre genre in genres)
+        //            {
+        //                if (!item.Genres.Contains(genre))
+        //                {
+        //                    containsAllGenres = false;
+        //                    break;
+        //                }
+        //            }
+        //            if (containsAllGenres) genreFilteredItems.Add(item);
+
+        //        }
+        //    }
+        //    else genreFilteredItems.AddRange(controller.Movies);
+
+
+        //    //string searchText = SearchTextBox.Text.ToLower();
+
+        //    //if (searchText != "") 
+        //    //{
+        //    //    foreach (MediaItem item in filteredItems) 
+        //    //    {
+        //    //        if (!item.Name.ToLower().Contains(searchText)) 
+        //    //        {
+        //    //            filteredItems.Remove(item);
+        //    //        }
+        //    //    }
+        //    //}
+
+
+        //    dataGrid.ItemsSource = new ObservableCollection<MediaItem>(genreFilteredItems);
+        //}
+
+        private void MovieTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Ваш код для обработки изменений выбранного элемента в ComboBox
+            LoadMoviesToDataGrid();
+        }
+
+        private void ClearFilter_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = string.Empty;
+            MovieTypeComboBox.SelectedItem = MovieType.ANY;
+            UncheckCheckboxes();
+            LoadMoviesToDataGrid();
+        }
+
+        private void UncheckCheckboxes()
+        {
+            ActionCheckBox.IsChecked = false;
+            ComedyCheckBox.IsChecked = false;
+            DramaCheckBox.IsChecked = false;
+            FantasyCheckBox.IsChecked = false;
+            HorrorCheckBox.IsChecked = false;
+            MysteryCheckBox.IsChecked = false;
+            RomanceCheckBox.IsChecked = false;
+            ThrillerCheckBox.IsChecked = false;
+
+        }
+
         private void LoadMoviesToDataGrid()
         {
-            List<MediaItem> filteredItems = new List<MediaItem>();
+            List<MediaItem> movieTypeFilteredItems = new List<MediaItem>();
 
+            if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.MOVIE)
+            {
+                //movieTypeFilteredItems.AddRange(controller.Movies.Where(movie => movie is Movie));
+                foreach (MediaItem item in controller.Movies) if (item is Movie) movieTypeFilteredItems.Add(item);
+
+            }
+            else if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.SERIES)
+            {
+                //movieTypeFilteredItems.AddRange(controller.Movies.Where(movie => movie is Series));
+                foreach (MediaItem item in controller.Movies)
+                {
+                    if (item is Series) movieTypeFilteredItems.Add(item);
+                }
+            }
+            else movieTypeFilteredItems = controller.Movies;
+
+
+            List<MediaItem> nameFilteredItems = new List<MediaItem>();
+            string searchText = SearchTextBox.Text.ToLower();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                foreach (MediaItem item in movieTypeFilteredItems)
+                {
+                    if (item.Name.ToLower().Contains(searchText))
+                    {
+                        nameFilteredItems.Add(item);
+                    }
+                }
+            }
+            else nameFilteredItems = movieTypeFilteredItems;
+
+            List<MediaItem> genreFilteredItems = new List<MediaItem>();
+
+
+            List<MediaItem> items = controller.Movies;
+            if (nameFilteredItems.Count > 0) items = nameFilteredItems;
             // Filter movies by selected genres
             if (genres.Count > 0)
             {
-                foreach (MediaItem item in controller.Movies)
+                foreach (MediaItem item in nameFilteredItems)
                 {
                     bool containsAllGenres = true;
                     foreach (Genre genre in genres)
@@ -340,19 +464,22 @@ namespace Medias
                             break;
                         }
                     }
-                    if (containsAllGenres)
-                    {
-                        filteredItems.Add(item);
-                    }
+                    if (containsAllGenres) genreFilteredItems.Add(item);
+
                 }
             }
-            else
+            else genreFilteredItems.AddRange(nameFilteredItems);
+
+            displayedMovies.Clear(); // Очистка данных
+            foreach (var item in genreFilteredItems)
             {
-                filteredItems.AddRange(controller.Movies);
+                displayedMovies.Add(item); // Добавление отфильтрованных данных
             }
 
-            dataGrid.ItemsSource = new ObservableCollection<MediaItem>(filteredItems);
+            dataGrid.ItemsSource = displayedMovies;
         }
+
+
 
         private void AddMediaItem(MediaItem mediaItem)
         {
@@ -457,6 +584,7 @@ namespace Medias
                 return null;
             }
         }
+
 
     }
 }

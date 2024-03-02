@@ -37,8 +37,8 @@
                     <ColumnDefinition Width="25*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Margin="0,0,1,0" x:Name="SearchTextBox" Grid.Column="0" Text="Search..."  FontSize="16"/>
-                <ComboBox Margin="1,0,0,0" x:Name="MovieTypeComboBox"  Grid.Column="1" FontSize="16">
+                <TextBox TextChanged="SearchTextBox_TextChanged" Margin="0,0,1,0" x:Name="SearchTextBox" Grid.Column="0"  FontSize="16"/>
+                <ComboBox SelectionChanged="MovieTypeComboBox_SelectionChanged" Margin="1,0,0,0" x:Name="MovieTypeComboBox"  Grid.Column="1" FontSize="16">
 
                 </ComboBox>
 
@@ -117,7 +117,7 @@
 
             </Grid.RowDefinitions>
 
-            <Button Grid.Row="0" Content="Clear filter" FontSize="16"></Button>
+            <Button Click="ClearFilter_Click" Grid.Row="0" Content="Clear filter" FontSize="16"></Button>
             <Grid Grid.Row="1" Margin="0,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
