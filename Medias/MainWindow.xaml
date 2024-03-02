@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Medias"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="Movies" 
         WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
         
-        Height="700" Width="1200"
-        MinHeight="700" MinWidth="1200"
+        Height="710" Width="1200"
+        MinHeight="710" MinWidth="1200"
         MaxHeight="1080" MaxWidth="1920">
 
     <Grid Margin="5">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80*"/>
-            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="92*"/>
+            <ColumnDefinition Width="8*"/>
 
         </Grid.ColumnDefinitions>
 
@@ -37,34 +37,34 @@
                     <ColumnDefinition Width="25*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox TextChanged="SearchTextBox_TextChanged" Margin="0,0,1,0" x:Name="SearchTextBox" Grid.Column="0"  FontSize="16"/>
-                <ComboBox SelectionChanged="MovieTypeComboBox_SelectionChanged" Margin="1,0,0,0" x:Name="MovieTypeComboBox"  Grid.Column="1" FontSize="16">
+                <TextBox TextChanged="SearchTextBox_TextChanged" Margin="1" x:Name="SearchTextBox" Grid.Column="0"  FontSize="12"/>
+                <ComboBox SelectionChanged="MovieTypeComboBox_SelectionChanged" Margin="1" x:Name="MovieTypeComboBox"  Grid.Column="1" FontSize="12">
 
                 </ComboBox>
 
             </Grid>
 
-            <DataGrid  Grid.Row="1" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="0,5,0,0"  x:Name="dataGrid" FontSize="16" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
+            <DataGrid  Grid.Row="1" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="1"  x:Name="dataGrid" FontSize="12" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
                 <DataGrid.Columns>
 
-                    <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Description" Width="300" Binding="{Binding Description}" IsReadOnly="True"/>
-                    <DataGridTemplateColumn Header="Genres" Width="250" IsReadOnly="True">
+                    <DataGridTextColumn Header="Name" MinWidth="100" Width="100" Binding="{Binding Name}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Description" MinWidth="100"  Width="250" Binding="{Binding Description}" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="Genres" MinWidth="100"  Width="220" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding GenresString}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Authors" Width="250" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Authors" MinWidth="100" Width="220" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding AuthorsString}"  />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Time" Width="100" Binding="{Binding DurationToString}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Status" Width="150" Binding="{Binding Status}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Time" MinWidth="100" Width="100" Binding="{Binding DurationToString}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Status" MinWidth="100" Width="150" Binding="{Binding Status}" IsReadOnly="True"/>
 
                 </DataGrid.Columns>
             </DataGrid>
@@ -78,30 +78,30 @@
 
 
                 <!--Add/Edit/Delete buttons Grid-->
-                <Grid Grid.Column="0">
+                <Grid Grid.Column="0" Margin="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button  Height="30"  Grid.Column="0" Content="Add"  FontSize="16" Click="Add_Click"/>
-                    <Button  Height="30"  Grid.Column="1" Content="Edit"  FontSize="16" Click="Edit_Click"/>
-                    <Button  Height="30"  Grid.Column="2" Content="Delete" FontSize="16" Click="Delete_Click"/>
+                    <Button  Margin="0,2,4,2"  Grid.Column="0" Content="Add"  FontSize="12" Click="Add_Click"/>
+                    <Button  Margin="2,2,2,2"  Grid.Column="1" Content="Edit"  FontSize="12" Click="Edit_Click"/>
+                    <Button   Margin="4,2,0,2"  Grid.Column="2" Content="Delete" FontSize="12" Click="Delete_Click"/>
 
                 </Grid>
                 <!--Save/Load/Clear buttons Grid-->
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="2" Margin="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button  Height="30" Content="Save"  Grid.Column="0"  FontSize="16" Click="Save_Click"/>
-                    <Button  Height="30" Content="Load" Grid.Column="1" FontSize="16" Click="Load_Click"/>
+                    <Button Margin="0,2,4,2"   Content="Save"  Grid.Column="0"  FontSize="12" Click="Save_Click"/>
+                    <Button Margin="2,2,2,2"  Content="Load" Grid.Column="1" FontSize="12" Click="Load_Click"/>
 
-                    <Button  Height="30"  Grid.Column="2" Content="Clear all" FontSize="16" Click="Clear_Click"/>
+                    <Button Margin="4,2,0,2"   Grid.Column="2" Content="Clear all" FontSize="12" Click="Clear_Click"/>
 
                 </Grid>
 
@@ -117,8 +117,8 @@
 
             </Grid.RowDefinitions>
 
-            <Button Click="ClearFilter_Click" Grid.Row="0" Content="Clear filter" FontSize="16"></Button>
-            <Grid Grid.Row="1" Margin="0,5,0,0">
+            <Button Click="ClearFilter_Click" Grid.Row="0" Margin="1" Content="Clear filter" FontSize="12"></Button>
+            <Grid Grid.Row="1" >
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -131,14 +131,14 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <CheckBox Grid.Row="0" Checked="ActionCheckBox_Checked"  Unchecked="ActionCheckBox_Unchecked"  Content="Action"     x:Name="ActionCheckBox"></CheckBox>
-                <CheckBox Grid.Row="1" Checked="ComedyCheckBox_Checked"  Unchecked="ComedyCheckBox_Unchecked"  Content="Comedy"     x:Name="ComedyCheckBox"></CheckBox>
-                <CheckBox Grid.Row="2" Checked="DramaCheckBox_Checked"   Unchecked="DramaCheckBox_Unchecked"  Content="Drama"      x:Name="DramaCheckBox"></CheckBox>
-                <CheckBox Grid.Row="3" Checked="FantasyCheckBox_Checked" Unchecked="FantasyCheckBox_Unchecked"  Content="Fantasy"    x:Name="FantasyCheckBox"></CheckBox>
-                <CheckBox Grid.Row="4" Checked="HorrorCheckBox_Checked"  Unchecked="HorrorCheckBox_Unchecked"  Content="Horror"     x:Name="HorrorCheckBox"></CheckBox>
-                <CheckBox Grid.Row="5" Checked="MysteryCheckBox_Checked" Unchecked="MysteryCheckBox_Unchecked"  Content="Mystery"    x:Name="MysteryCheckBox"></CheckBox>
-                <CheckBox Grid.Row="6" Checked="RomanceCheckBox_Checked"    Unchecked="RomanceCheckBox_Unchecked"  Content="Romance"    x:Name="RomanceCheckBox"></CheckBox>
-                <CheckBox Grid.Row="7" Checked="ThrillerCheckBox_Checked" Unchecked="ThrillerCheckBox_Unchecked" Content="Thriller"   x:Name="ThrillerCheckBox"></CheckBox>
+                <CheckBox Grid.Row="0" Checked="ActionCheckBox_Checked"  Unchecked="ActionCheckBox_Unchecked"  Content="Action"    FontSize="12" x:Name="ActionCheckBox"></CheckBox>
+                <CheckBox Grid.Row="1" Checked="ComedyCheckBox_Checked"  Unchecked="ComedyCheckBox_Unchecked"  Content="Comedy"    FontSize="12" x:Name="ComedyCheckBox"></CheckBox>
+                <CheckBox Grid.Row="2" Checked="DramaCheckBox_Checked"   Unchecked="DramaCheckBox_Unchecked"  Content="Drama"     FontSize="12" x:Name="DramaCheckBox"></CheckBox>
+                <CheckBox Grid.Row="3" Checked="FantasyCheckBox_Checked" Unchecked="FantasyCheckBox_Unchecked"  Content="Fantasy"  FontSize="12"  x:Name="FantasyCheckBox"></CheckBox>
+                <CheckBox Grid.Row="4" Checked="HorrorCheckBox_Checked"  Unchecked="HorrorCheckBox_Unchecked"  Content="Horror"    FontSize="12" x:Name="HorrorCheckBox"></CheckBox>
+                <CheckBox Grid.Row="5" Checked="MysteryCheckBox_Checked" Unchecked="MysteryCheckBox_Unchecked"  Content="Mystery"  FontSize="12"  x:Name="MysteryCheckBox"></CheckBox>
+                <CheckBox Grid.Row="6" Checked="RomanceCheckBox_Checked"  Unchecked="RomanceCheckBox_Unchecked"  Content="Romance"  FontSize="12"  x:Name="RomanceCheckBox"></CheckBox>
+                <CheckBox Grid.Row="7" Checked="ThrillerCheckBox_Checked" Unchecked="ThrillerCheckBox_Unchecked" Content="Thriller"  FontSize="12" x:Name="ThrillerCheckBox"></CheckBox>
 
                 <!--<ComboBoxItem>Action</ComboBoxItem>
                 <ComboBoxItem>Comedy</ComboBoxItem>
