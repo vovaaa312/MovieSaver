@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace MovieSaver.Model
 {
@@ -25,12 +26,19 @@ namespace MovieSaver.Model
 
 
 
-        public Series(int id, string name, string description, List<Genre> genres,
-            List<Author> authors, WatchStatus status, List<Season> seasons) : base(id, name, description, genres, authors, status)
+        public Series(int id, string name, int rating, string description, List<Genre> genres,
+            List<Author> authors, List<Actor> actors, WatchStatus status, List<Season> seasons) : base(id, name, rating, description, genres, authors, actors, status)
         {
             Seasons = seasons;
         }
 
-      
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.Append("Series =[");
+            sb.Append(base.ToString()).Append(", ").Append(DurationToString).Append("]");
+            return base.ToString();
+        }
     }
 }

@@ -1,7 +1,10 @@
-﻿using Medias.Model.Enum;
+﻿using Medias.Controller;
+using Medias.Model;
+using Medias.Model.Enum;
 using MovieSaver.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,15 +25,23 @@ namespace Medias.Forms
     /// </summary>
     public partial class AddMovie : Window
     {
-        private List<Genre> GenresList = new();
-        private List<Author> AuthorsList = new();
+
+        private GenresCotnroller genreController = new();
+        private AuthorsController authorController = new();
+        private ActorsController actorController = new();
+
+        public bool SaveClicked { get; private set; } = false;
 
         public Movie NewMovie { get; set; }
+
+        private Movie movieCopy;
         public AddMovie()
         {
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
             comboStatus.SelectedItem = WatchStatus.NotSelected;
+           // Closing += AddMovie_Closing;
+
         }
         public AddMovie(Movie movie)
         {
@@ -41,13 +52,21 @@ namespace Medias.Forms
 
             txtName.Text = movie.Name;
             txtDescription.Text = movie.Description;
-            GenresList = movie.Genres;
-            AuthorsList = movie.Authors;
+
+            genreController = new(movie.Genres);
+            actorController = new(movie.Actors);
+            authorController = new(movie.Authors);
+
             comboStatus.SelectedItem = movie.Status;
             txtMovieLength.Text = movie.MovieLength.TotalMinutes.ToString();
+            txtRating.Text = movie.Rating.ToString();
 
             LoadGenresToList();
             LoadAuthorsToList();
+            LoadActorsToList();
+            Closing += AddMovie_Closing;
+
+            movieCopy = movie;
 
         }
         private void AddGenre_Click(object sender, RoutedEventArgs e)
@@ -62,40 +81,66 @@ namespace Medias.Forms
             }
 
             string genreName = selectedItem.Content.ToString();
-            if (GenresList.Any(g => g.Name == genreName))
+            //if (GenresList.Any(g => g.Name == genreName))
+
+
+            if (genreController.Contains(new Genre(genreName)))
             {
                 ShowErrorDialog($"Genre '{genreName}' already  in the list.");
                 return;
             }
 
             //add new genre to list
-            GenresList.Add(new Genre(genreName));
+            genreController.Add(new Genre(genreName));
             //update list
             LoadGenresToList();
         }
         private void DeleteGenre_Click(object sender, RoutedEventArgs e)
         {
-            if (GenresList.Count == 0)
+
+
+            if (canDeleteGenre()) DeleteGenre((string)GenresListBox.SelectedItem);
+
+        }
+
+        private void DeleteGenre(string selectedGenre)
+        {
+            //GenresList.RemoveAll(g => g.Name == selectedGenre);
+            try
+            {
+                genreController.Remove(new Genre(selectedGenre));
+                LoadGenresToList();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog(ex);
+            }
+
+        }
+
+        private bool canDeleteGenre()
+        {
+            if (genreController.IsEmpty())
             {
                 ShowErrorDialog("Genre list is empty.");
-                return;
+                return false;
             }
             if (GenresListBox.SelectedItem == null)
             {
                 ShowErrorDialog("Select a genre to delete.");
-                return;
+                return false;
             }
-            if (GenresList.Count == 1)
+            if (genreController.Count() == 1)
             {
                 ShowErrorDialog("Movie must have at least 1 genre.");
-                return;
+                return false;
             }
-            string selectedGenre = (string)GenresListBox.SelectedItem;
-            GenresList.RemoveAll(g => g.Name == selectedGenre);
-            LoadGenresToList();
+            return true;
         }
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
+
+
             string authName = AuthorNameTextBox.Text;
             if (!(authName.Length > 0))
             {
@@ -103,60 +148,86 @@ namespace Medias.Forms
                 return;
             }
 
-            if (AuthorsList.Any(g => g.Name == authName))
-            {
-                ShowErrorDialog($"Autor '{authName}' already in the list.");
-                return;
-            }
-
             Author auth = new(authName);
-            // add new author to list
-            AuthorsList.Add(auth);
-            //update list
-            LoadAuthorsToList();
-            //clear text box
-            AuthorNameTextBox.Clear();
+
+            try
+            {
+                // add new author to list
+                authorController.Add(auth);
+                //clear text box
+                AuthorNameTextBox.Clear();
+                //update list
+                LoadAuthorsToList();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog(ex);
+            }
         }
         private void DeleteAuthor_Click(object sender, RoutedEventArgs e)
         {
-            if (AuthorsList.Count == 0)
+
+
+            if (canDeleteAuthor()) DeleteAuthor((string)AuthorsListBox.SelectedItem);
+
+        }
+
+        private bool canDeleteAuthor()
+        {
+            if (authorController.IsEmpty())
             {
                 ShowErrorDialog("Author list is empty.");
-                return;
+                return false;
             }
             if (AuthorsListBox.SelectedItem == null)
             {
                 ShowErrorDialog("Select author to delete.");
-                return;
+                return false;
             }
-            if (AuthorsList.Count == 1)
+            if (authorController.Count() == 1)
             {
                 ShowErrorDialog("Movie must have at least 1 author.");
-                return;
+                return false;
             }
+            return true;
+        }
 
-            string selectedAuthor = (string)AuthorsListBox.SelectedItem;
-            AuthorsList.RemoveAll(g => g.Name == selectedAuthor);
-            LoadAuthorsToList();
+        private void DeleteAuthor(string author)
+        {
+            //AuthorsList.RemoveAll(g => g.Name == author);
+            try
+            {
+
+                authorController.Remove(new Author(author));
+                LoadAuthorsToList();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog(ex);
+            }
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            double length; // Используем double для парсинга времени
-            double.TryParse(txtMovieLength.Text, out length); // Парсим как Double
+            double length; 
+            double.TryParse(txtMovieLength.Text, out length); 
 
             string movieName = txtName.Text;
             string description = txtDescription.Text;
             WatchStatus watchStatus = (WatchStatus)comboStatus.SelectedItem;
-             // Преобразуем в TimeSpan
+            // convert to TimeSpan
             string movieLength = txtMovieLength.Text;
-            List<Genre>? genres = GenresList;
-            List<Author>? authors = AuthorsList;
+            List<Genre>? genres = genreController.Genres;
+            List<Author>? authors = authorController.Authors;
+            List<Actor>? actors = actorController.Actors;
+            string _rating = txtRating.Text;
+
 
             string message = CheckFields(
                 movieName,
                 description,
-                genres,
-                authors,
+                genreController.IsEmpty(),
+                authorController.IsEmpty(),
+                actorController.IsEmpty(),
                 watchStatus,
                 movieLength
                 );
@@ -172,7 +243,10 @@ namespace Medias.Forms
             int id = 0;
             if (NewMovie != null) id = NewMovie.Id;
             TimeSpan movieLengthTS = TimeSpan.FromMinutes(length);
-            NewMovie = new Movie(id, movieName, description, genres, authors, watchStatus, movieLengthTS);
+            int rating = Int32.Parse(_rating);
+
+            NewMovie = new Movie(id, movieName, rating, description, genres, authors,actors, watchStatus, movieLengthTS);
+            SaveClicked = true;
             Close();
 
 
@@ -180,7 +254,7 @@ namespace Medias.Forms
         private void LoadGenresToList()
         {
             GenresListBox.Items.Clear();
-            foreach (var g in GenresList)
+            foreach (var g in genreController.Genres)
             {
                 GenresListBox.Items.Add(g.Name);
             }
@@ -188,19 +262,25 @@ namespace Medias.Forms
         private void LoadAuthorsToList()
         {
             AuthorsListBox.Items.Clear();
-            foreach (var g in AuthorsList)
+            foreach (var g in authorController.Authors)
             {
                 AuthorsListBox.Items.Add(g.Name);
             }
         }
-        private string CheckFields(string txtName, string txtDescription, List<Genre> genresList, List<Author> authorsList, object selectedItem, string txtMovieLength)
+        private void LoadActorsToList()
+        {
+            ActorsListBox.ItemsSource = new ObservableCollection<Actor>(actorController.Actors);
+        }
+        private string CheckFields(string txtName, string txtDescription, bool genresEmpty, bool authorsEmpty, bool actorsEmpty, object selectedItem, string txtMovieLength)
         {
             StringBuilder sb = new();
 
             if (txtName.Length == 0) sb.Append("Movie name cannot be empty").Append("\n");
             //if(txtDescription.Length == 0)
-            if (genresList.Count == 0) sb.Append("Genres list is empty").Append("\n");
-            if (authorsList.Count == 0) sb.Append("Author list is empty").Append("\n");
+            if (genresEmpty) sb.Append("Genres list is empty").Append("\n");
+            if (authorsEmpty) sb.Append("Authors list is empty").Append("\n");
+            if (actorsEmpty) sb.Append("Actors list is empty").Append("\n");
+
             if (selectedItem.Equals(WatchStatus.NotSelected)) sb.Append("Watch status is not selected").Append("\n");
 
             bool res;
@@ -215,10 +295,61 @@ namespace Medias.Forms
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        private void ShowErrorDialog(Exception ex)
+        {
+            MessageBox.Show(ex.Message, ex.GetType().ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         private bool ShowConfirmationDialog(string message)
         {
             MessageBoxResult result = MessageBox.Show(message, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
+        }
+
+        private void AddActor_Click(object sender, RoutedEventArgs e)
+        {
+            var addActorWindow = new AddActor();
+            addActorWindow.ShowDialog();
+            if (addActorWindow.NewActor != null)
+            {
+
+                actorController.Add(addActorWindow.NewActor);
+                LoadActorsToList();
+            }
+        }
+
+        private void DeleteActor_Click(object sender, RoutedEventArgs e)
+        {
+            if (canDeleteActor()) DeleteActor((Actor)ActorsListBox.SelectedItem);
+
+        }
+        private bool canDeleteActor()
+        {
+            if (actorController.IsEmpty())
+            {
+                ShowErrorDialog("Actors list is empty.");
+                return false;
+            }
+            if (ActorsListBox.SelectedItem == null)
+            {
+                ShowErrorDialog("Select actor to delete.");
+                return false;
+            }
+            return true;
+
+        }
+        private void DeleteActor(Actor selectedItem)
+        {
+            actorController.Delete(selectedItem);
+            LoadActorsToList();
+        }
+
+
+        private void AddMovie_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(!SaveClicked) NewMovie = movieCopy; 
+            //MessageBox.Show(NewMovie?.ToString());
+
         }
     }
 }

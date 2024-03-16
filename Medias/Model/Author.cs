@@ -22,5 +22,11 @@ namespace MovieSaver.Model
             return obj is Author author &&
                    Name == author.Name;
         }
+
+        public override string ToString()
+        {
+            return $"Author=[Name='{Name}']";
+        }
+
     }
 }

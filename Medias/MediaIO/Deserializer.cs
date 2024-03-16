@@ -20,7 +20,6 @@ namespace Medias.MediaIO
 
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {
-                // Десериализуем список объектов из файла
                 mediaItemsFromFile = (List<MediaItem>)formatter.Deserialize(stream);
             }
             return mediaItemsFromFile;

@@ -44,25 +44,42 @@
 
             </Grid>
 
-            <DataGrid  Grid.Row="1" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="1"  x:Name="dataGrid" FontSize="12" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
+            <DataGrid  Grid.Row="1" MinRowHeight="25" RowHeight="50" MouseDoubleClick="DataGridRow_MouseDoubleClick" Margin="1"  x:Name="dataGrid" FontSize="12" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False"  >
                 <DataGrid.Columns>
 
                     <DataGridTextColumn Header="Name" MinWidth="100" Width="100" Binding="{Binding Name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Description" MinWidth="100"  Width="250" Binding="{Binding Description}" IsReadOnly="True"/>
-                    <DataGridTemplateColumn Header="Genres" MinWidth="100"  Width="220" IsReadOnly="True">
+                    <DataGridTextColumn Header="Rating" MinWidth="50" Width="50" Binding="{Binding Rating}" IsReadOnly="True"/>
+
+                    <DataGridTemplateColumn Header="Actors" MinWidth="100" Width="220" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding GenresString}" />
+                                <TextBlock Text="{Binding ActorsString}" TextWrapping="Wrap"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn Header="Genres" MinWidth="100" Width="220" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding GenresString}" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                     <DataGridTemplateColumn Header="Authors" MinWidth="100" Width="220" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding AuthorsString}"  />
+                                <TextBlock Text="{Binding AuthorsString}" TextWrapping="Wrap"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Description" MinWidth="100" Width="250" Binding="{Binding Description}" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Time" MinWidth="100" Width="100" Binding="{Binding DurationToString}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Status" MinWidth="100" Width="150" Binding="{Binding Status}" IsReadOnly="True"/>
 

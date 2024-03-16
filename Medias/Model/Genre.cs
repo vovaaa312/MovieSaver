@@ -23,5 +23,10 @@ namespace MovieSaver.Model
                    Name == genre.Name;
         }
 
+        public override string ToString()
+        {
+            return $"Genre=[Name='{Name}']";
+        }
+
     }
 }

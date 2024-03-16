@@ -1,5 +1,6 @@
 ﻿using Medias.Forms;
 using Medias.MediaIO;
+using Medias.Model;
 using Medias.Model.Enum;
 using MovieSaver.Controller;
 using MovieSaver.Model;
@@ -30,6 +31,8 @@ namespace Medias
 
         public MainWindow()
         {
+            this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+
             controller = new MovieController();
 
             //controller.AddMovie(
@@ -109,62 +112,70 @@ namespace Medias
                 ShowErrorDialog("Movie list is empty.");
                 return;
             }
-
-            // Create a dialog box for selecting a save file
-            var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
-            saveFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Фильтр для файлов
-            saveFileDialog.DefaultExt = ".dat"; // Расширение файла по умолчанию
-
-            // Open the dialog box and get the result
-            bool? result = saveFileDialog.ShowDialog();
-
-            // Checking whether the file was selected and whether the "Save" button was clicked
-            if (result == true)
+            try
             {
-                // Getting the path to the selected file
-                string filePath = saveFileDialog.FileName;
 
-                try
+                // Create a dialog box for selecting a save file
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                saveFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Фильтр для файлов
+                saveFileDialog.DefaultExt = ".dat"; // Расширение файла по умолчанию
+
+                // Open the dialog box and get the result
+                bool? result = saveFileDialog.ShowDialog();
+
+                // Checking whether the file was selected and whether the "Save" button was clicked
+                if (result == true)
                 {
+                    // Getting the path to the selected file
+                    string filePath = saveFileDialog.FileName;
+
+
                     Serializer.SaveToFile(controller.Movies, filePath);
                     MessageBox.Show($"Data will be saved to: {filePath}");
-                }
-                catch (IOException ex)
-                {
-                    ShowErrorDialog(ex.Message);
-                }
 
+
+                }
             }
+            catch (Exception ex)
+            {
+                ShowErrorDialog(ex);
+            }
+
+
+
         }
         private void Load_Click(object sender, RoutedEventArgs e)
         {
-
-            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            openFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Filter for files
-
-            // Open the dialog box and get the result
-            bool? result = openFileDialog.ShowDialog();
-
-            // Checking whether the file was selected and whether the "Open" button was clicked
-            if (result == true)
+            try
             {
-                // Getting the path to the selected file
-                string filePath = openFileDialog.FileName;
+                var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+                openFileDialog.Filter = "Binary Files (*.dat)|*.dat|All Files (*.*)|*.*"; // Filter for files
 
-                try
+                // Open the dialog box and get the result
+                bool? result = openFileDialog.ShowDialog();
+
+                // Checking whether the file was selected and whether the "Open" button was clicked
+                if (result == true)
                 {
+                    // Getting the path to the selected file
+                    string filePath = openFileDialog.FileName;
+
+
                     List<MediaItem> readedItems = Deserializer.ReadFile(filePath);
 
                     // Clear existing data
                     controller = new(readedItems);
 
                     LoadMoviesToDataGrid();
-                }
-                catch (IOException ex)
-                {
-                    ShowErrorDialog(ex.Message);
+
                 }
             }
+            catch (Exception ex)
+            {
+                ShowErrorDialog(ex);
+            }
+
+
 
         }
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -409,53 +420,124 @@ namespace Medias
             ThrillerCheckBox.IsChecked = false;
 
         }
+        //private void LoadMoviesToDataGrid()
+        //{
+        //    List<MediaItem> movieTypeFilteredItems = new List<MediaItem>();
+
+        //    if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.MOVIE)
+        //    {
+        //        foreach (MediaItem item in controller.Movies)
+        //        {
+        //            if (item is Movie)
+        //                movieTypeFilteredItems.Add(item);
+        //        }
+        //    }
+        //    else if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.SERIES)
+        //    {
+        //        foreach (MediaItem item in controller.Movies)
+        //        {
+        //            if (item is Series)
+        //                movieTypeFilteredItems.Add(item);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        movieTypeFilteredItems = controller.Movies;
+        //    }
+
+        //    List<MediaItem> nameFilteredItems = new List<MediaItem>();
+        //    string searchText = SearchTextBox.Text.ToLower();
+        //    if (!string.IsNullOrEmpty(searchText))
+        //    {
+        //        foreach (MediaItem item in movieTypeFilteredItems)
+        //        {
+        //            if (item.Name.ToLower().Contains(searchText))
+        //            {
+        //                nameFilteredItems.Add(item);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        nameFilteredItems = movieTypeFilteredItems;
+        //    }
+
+        //    List<MediaItem> genreFilteredItems = new List<MediaItem>();
+
+        //    if (genres.Count > 0)
+        //    {
+        //        foreach (MediaItem item in nameFilteredItems)
+        //        {
+        //            bool containsAllGenres = true;
+        //            foreach (Genre genre in genres)
+        //            {
+        //                if (!item.Genres.Contains(genre))
+        //                {
+        //                    containsAllGenres = false;
+        //                    break;
+        //                }
+        //            }
+        //            if (containsAllGenres)
+        //                genreFilteredItems.Add(item);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        genreFilteredItems.AddRange(nameFilteredItems);
+        //    }
+
+        //    // Filter by actor name
+        //    List<MediaItem> actorFilteredItems = new List<MediaItem>();
+
+        //        foreach (MediaItem item in genreFilteredItems)
+        //        {
+
+        //            foreach (Actor actor in item.Actors)
+        //            {
+        //                if (actor.Name.ToLower().Contains(searchText) && !actorFilteredItems.Contains(item))
+        //                {
+        //                    actorFilteredItems.Add(item);
+        //                }
+        //            }
+
+        //        }
+
+
+        //    displayedMovies.Clear(); // Очистка данных
+
+        //    // Добавление отфильтрованных данных
+        //    foreach (var item in actorFilteredItems)
+        //    {
+        //        displayedMovies.Add(item);
+        //    }
+
+        //    dataGrid.ItemsSource = displayedMovies;
+        //}
 
         private void LoadMoviesToDataGrid()
         {
-            List<MediaItem> movieTypeFilteredItems = new List<MediaItem>();
+            List<MediaItem> filteredItems = new List<MediaItem>();
 
-            if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.MOVIE)
-            {
-                //movieTypeFilteredItems.AddRange(controller.Movies.Where(movie => movie is Movie));
-                foreach (MediaItem item in controller.Movies) if (item is Movie) movieTypeFilteredItems.Add(item);
+            MovieType selectedType = (MovieType)MovieTypeComboBox.SelectedItem;
 
-            }
-            else if ((MovieType)MovieTypeComboBox.SelectedItem == MovieType.SERIES)
+            foreach (MediaItem item in controller.Movies)
             {
-                //movieTypeFilteredItems.AddRange(controller.Movies.Where(movie => movie is Series));
-                foreach (MediaItem item in controller.Movies)
+                if (selectedType == MovieType.ANY ||
+                    (selectedType == MovieType.MOVIE && item is Movie) ||
+                    (selectedType == MovieType.SERIES && item is Series))
                 {
-                    if (item is Series) movieTypeFilteredItems.Add(item);
+                    filteredItems.Add(item);
                 }
             }
-            else movieTypeFilteredItems = controller.Movies;
 
-
-            List<MediaItem> nameFilteredItems = new List<MediaItem>();
-            string searchText = SearchTextBox.Text.ToLower();
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                foreach (MediaItem item in movieTypeFilteredItems)
-                {
-                    if (item.Name.ToLower().Contains(searchText))
-                    {
-                        nameFilteredItems.Add(item);
-                    }
-                }
-            }
-            else nameFilteredItems = movieTypeFilteredItems;
-
-            List<MediaItem> genreFilteredItems = new List<MediaItem>();
-
-
-            List<MediaItem> items = controller.Movies;
-            if (nameFilteredItems.Count > 0) items = nameFilteredItems;
-            // Filter movies by selected genres
             if (genres.Count > 0)
             {
-                foreach (MediaItem item in nameFilteredItems)
+                List<MediaItem> genreFilteredItems = new List<MediaItem>();
+
+                foreach (MediaItem item in filteredItems)
                 {
                     bool containsAllGenres = true;
+
                     foreach (Genre genre in genres)
                     {
                         if (!item.Genres.Contains(genre))
@@ -464,20 +546,92 @@ namespace Medias
                             break;
                         }
                     }
-                    if (containsAllGenres) genreFilteredItems.Add(item);
 
+                    if (containsAllGenres)
+                    {
+                        genreFilteredItems.Add(item);
+                    }
                 }
-            }
-            else genreFilteredItems.AddRange(nameFilteredItems);
 
-            displayedMovies.Clear(); // Очистка данных
-            foreach (var item in genreFilteredItems)
+                filteredItems = genreFilteredItems;
+            }
+
+            string searchText = SearchTextBox.Text.ToLower();
+
+            //if (!string.IsNullOrEmpty(searchText))
+            //{
+            //    List<MediaItem> nameOrActorFilteredItems = new List<MediaItem>();
+
+            //    foreach (MediaItem item in filteredItems)
+            //    {
+            //        bool nameFound = item.Name.ToLower().Contains(searchText);
+            //        bool actorFound = false;
+
+            //        foreach (Actor actor in item.Actors)
+            //        {
+            //            if (actor.Name.ToLower().Contains(searchText))
+            //            {
+            //                actorFound = true;
+            //                break;
+            //            }
+            //        }
+
+            //        if (nameFound || actorFound)
+            //        {
+            //            nameOrActorFilteredItems.Add(item);
+            //        }
+            //    }
+
+            //    filteredItems = nameOrActorFilteredItems;
+            //}
+
+            if (!string.IsNullOrEmpty(searchText))
             {
-                displayedMovies.Add(item); // Добавление отфильтрованных данных
+                List<MediaItem> nameOrActorFilteredItems = new List<MediaItem>();
+
+                foreach (MediaItem item in filteredItems)
+                {
+                    bool nameFound = item.Name.ToLower().Contains(searchText);
+                    bool actorFound = false;
+                    bool authorFound = false;
+
+                    // Проверяем, есть ли совпадение по имени или актёру или автору
+                    foreach (Actor actor in item.Actors)
+                    {
+                        if (actor.Name.ToLower().Contains(searchText))
+                        {
+                            actorFound = true;
+                            break;
+                        }
+                    }
+
+                    foreach (Author author in item.Authors)
+                    {
+                        if (author.Name.ToLower().Contains(searchText))
+                        {
+                            authorFound = true;
+                            break;
+                        }
+                    }
+
+                    if (nameFound || actorFound || authorFound)
+                    {
+                        nameOrActorFilteredItems.Add(item);
+                    }
+                }
+
+                filteredItems = nameOrActorFilteredItems;
+            }
+
+            displayedMovies.Clear();
+            foreach (MediaItem item in filteredItems)
+            {
+                displayedMovies.Add(item);
             }
 
             dataGrid.ItemsSource = displayedMovies;
         }
+
 
 
 
@@ -537,9 +691,15 @@ namespace Medias
             Movie selectedMovie = (Movie)selectedItem;
             var editMovieWindow = new AddMovie(selectedMovie);
             editMovieWindow.ShowDialog();
-            MediaItem editedMovie = editMovieWindow.NewMovie;
 
-            controller.EditMovie(editedMovie);
+            if (editMovieWindow.SaveClicked)
+            {
+                MessageBox.Show("Save clicked", "EditMovieItem method");
+                MediaItem editedMovie = editMovieWindow.NewMovie;
+
+                controller.EditMovie(editedMovie);
+            }
+
             LoadMoviesToDataGrid();
 
 
@@ -560,6 +720,11 @@ namespace Medias
         private void ShowErrorDialog(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void ShowErrorDialog(Exception ex)
+        {
+            MessageBox.Show(ex.Message, ex.GetType().ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         private bool ShowConfirmationDialog(string message)
         {
@@ -583,6 +748,23 @@ namespace Medias
             {
                 return null;
             }
+        }
+
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            //if (e.Key == Key.Delete)
+            //{
+            //    // Показать сообщение о подтверждении удаления
+            //    bool result = ShowConfirmationDialog("Are you sure you want to delete?");
+            //    if (result)
+            //    {
+            //        // Выполнить удаление
+            //        DeleteMediaItem();
+            //    }
+            //}
+
+            DeleteMediaItem();
         }
 
 

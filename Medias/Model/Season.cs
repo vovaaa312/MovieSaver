@@ -38,9 +38,19 @@ namespace Medias.Model
             EpisodesCount = episodesCount;
         }
        
+            
         public override string ToString()
         {
-            return $"Season {Id}: {Name} - Episodes: {EpisodesCount}";
+            return $"Season=[Id='{Id}', Name='{Name}', Description='{Description}' EpisodesCount='{EpisodesCount}']";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Season season &&
+                   Id == season.Id &&
+                   Name == season.Name &&
+                   Description == season.Description &&
+                   EpisodesCount == season.EpisodesCount;
         }
     }
 }

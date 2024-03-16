@@ -10,16 +10,6 @@ namespace MovieSaver.Controller
 {
     public class MovieController
     {
-        //public ObjectLinkedList Movies { get; set; }
-
-        //public MovieController()
-        //{
-        //    Movies = new ObjectLinkedList();
-        //}
-        //public MovieController(ObjectLinkedList movies)
-        //{
-        //    Movies = movies;
-        //}
 
 
         public List<MediaItem> Movies { get; set; }
@@ -29,9 +19,17 @@ namespace MovieSaver.Controller
 
         public MovieController(List<MediaItem> movies)
         {
-            Movies = movies;
-            if (Movies.Any()) maxId = Movies.Max(movie => movie.Id);
-            else maxId = 0;
+
+            if (movies is null || movies.Count == 0)
+            {
+                Movies = new List<MediaItem>();
+
+            }
+            else 
+            {
+                Movies = movies;
+                maxId = Movies.Max(movie => movie.Id);
+            }
 
         }
         public MovieController()
@@ -55,28 +53,28 @@ namespace MovieSaver.Controller
                 movie.Id = ++maxId;
                 Movies.Add(movie);
             }
-            else throw new ArgumentNullException("Cannot add a NULL movie");
+            else throw new ArgumentNullException("Cannot add a NULL movie.");
 
         }
 
         public void DeleteMovie(MediaItem movie)
         {
             if (!(movie is null)) Movies.Remove(movie);
-            else throw new NullReferenceException($"Movie '{movie.Name}' is not exists");
+            else throw new NullReferenceException($"Movie '{movie.Name}' is not exists.");
         }
 
         public void EditMovie(MediaItem newMovie)
         {
             if (newMovie == null)
             {
-                throw new ArgumentNullException(nameof(newMovie), "Cannot edit a NULL movie");
+                throw new ArgumentNullException(nameof(newMovie), "Cannot edit a NULL movie.");
             }
 
-            int index = Movies.FindIndex(movie => movie.Id == newMovie.Id);
+            int index = Movies.FindIndex(m => m.Id == newMovie.Id);
 
             if (index == -1)
             {
-                throw new NullReferenceException($"Movie with ID '{newMovie.Id}' does not exist");
+                throw new NullReferenceException($"Movie with ID '{newMovie.Id}' does not exist.");
             }
 
             Movies[index] = newMovie;

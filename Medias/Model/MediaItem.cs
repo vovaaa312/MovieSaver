@@ -13,6 +13,8 @@ namespace MovieSaver.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public int Rating { get; set; }
         public string Description { get; set; }
 
         //добавить абстрактный список сезонов. у movie = null
@@ -38,6 +40,18 @@ namespace MovieSaver.Model
                 UpdateAuthorsString();
             }
         }
+
+        private List<Actor> _actors;
+
+        public List<Actor> Actors {
+            get=> _actors;
+            set {
+                _actors = value;
+                UpdateActorsString();
+            }
+        }
+
+  
         public WatchStatus Status { get; set; }
 
         //public abstract TimeSpan Duration { get; }
@@ -47,39 +61,49 @@ namespace MovieSaver.Model
         public string GenresString { get; private set; }
         public string AuthorsString { get; private set; }
 
+        public string ActorsString { get; private set; }
+
+
         public MediaItem()
         {
         }
 
-        public MediaItem(int id, string name, string description, List<Genre> genres, List<Author> authors, WatchStatus status)
+        public MediaItem(int id, string name, int rating, string description, List<Genre> genres, List<Author> authors, List<Actor> actors, WatchStatus status)
         {
             Id = id;
             Name = name;
             Description = description;
             Genres = genres;
             Authors = authors;
+            Actors = actors;
             Status = status;
+            Rating = rating;
         }
 
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append($"Id: {Id}, Name: {Name}, Description: {Description}");
+            builder.Append($"Id='{Id}', Name='{Name}', Description='{Description}'");
 
-            if (Genres != null && Genres.Any())
+            if (Genres is not null && Genres.Any())
             {
-                builder.Append(", Genres: ");
-                builder.Append(string.Join(", ", Genres.Select(genre => genre.Name)));
+                builder.Append(", Genres=");
+                builder.Append("{").Append(string.Join(", ", Genres.Select(genre => genre.Name))).Append("}");
             }
 
-            if (Authors != null && Authors.Any())
+            if (Authors is not null && Authors.Any())
             {
-                builder.Append(", Authors: ");
-                builder.Append(string.Join(", ", Authors.Select(author => author.Name)));
+                builder.Append(", Authors=");
+                builder.Append("{").Append(string.Join(", ", Authors.Select(author => author.Name))).Append("}");
             }
+            if (Actors is not null && Actors.Any()) 
+            {
+                builder.Append(", Actors=");
+                builder.Append("{").Append(string.Join(", ", Actors.Select(author => author.Name))).Append("}");
 
-            builder.Append($", Status: {Status}");
+            }
+            builder.Append($", Status='{Status}'");
             
             return builder.ToString();
         }
@@ -146,5 +170,11 @@ namespace MovieSaver.Model
         {
             AuthorsString = string.Join(", ", Authors.Select(author => author.Name));
         }
+
+        private void UpdateActorsString()
+        {
+            ActorsString = string.Join(", ", Actors.Select(actor => actor.Name));
+        }
+
     }
 }

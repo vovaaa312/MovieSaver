@@ -22,8 +22,10 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="50*"/>
+                <ColumnDefinition Width="33*"/>
+                <ColumnDefinition Width="33*"/>
+                <ColumnDefinition Width="33*"/>
+
             </Grid.ColumnDefinitions>
 
             <!--Grid for first column-->
@@ -155,6 +157,65 @@
                     </Grid>
                 </Grid>
             </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="60*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label  Grid.Row="0" Content="Rating:"/>
+                    <TextBox  Grid.Row="1" Margin="1" x:Name="txtRating"/>
+
+                </Grid>
+                <Grid Grid.Row="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="80*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <Grid Grid.Row="0">
+                        <Label Content="Actors:"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70*"/>
+                            <ColumnDefinition Width="30*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DataGrid Grid.Column="0"  Margin="1" x:Name="ActorsListBox" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" MinWidth="65" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Character name" MinWidth="65" Binding="{Binding CharacterName}" IsReadOnly="True"/>
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                        <Grid Grid.Column="1" Margin="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddActor_Click"/>
+                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteActor_Click"/>
+
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        
         </Grid>
         
         <Button Grid.Row="1" Margin="100,1,100,1" FontSize="13" Content="Save" Click="Save_Click"/>

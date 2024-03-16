@@ -17,10 +17,8 @@ namespace Medias.MediaIO
 
             BinaryFormatter formatter = new BinaryFormatter();
 
-            // Создаем поток для записи в файл
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
-                // Сериализуем список объектов и записываем его в файл
                 formatter.Serialize(stream, Movies);
             }
         }
