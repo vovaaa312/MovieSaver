@@ -21,9 +21,12 @@ namespace Medias.Controller
 
         public SeasonsController(List<Season> seasons)
         {
-            if (seasons.Any()) Seasons = seasons;
+            //if (seasons.Any()) Seasons = seasons;
 
-            else Seasons = new();
+            //else Seasons = new();
+
+            Seasons = new List<Season>();
+            if (seasons is not null && seasons.Any()) Seasons.AddRange(seasons);
         }
 
         public bool IsEmpty() { return Seasons.Count == 0; }

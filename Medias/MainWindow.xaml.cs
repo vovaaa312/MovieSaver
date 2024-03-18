@@ -201,10 +201,8 @@ namespace Medias
         {
             if (sender is DataGrid grid && grid.SelectedItem != null)
             {
-                // Приведение выбранного элемента к вашему типу данных, если это необходимо
                 //var item = (MediaItem)grid.SelectedItem;
 
-                // Выполнение действия с выбранным элементом
                 //MessageBox.Show($"Double click on item: {item.ToString()}");
                 EditMediaItem();
             }
@@ -325,8 +323,6 @@ namespace Medias
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Ваш код для обработки изменений в SearchTextBox
-            // Например, можно выполнить поиск и обновить отображаемые данные в DataGrid
             LoadMoviesToDataGrid();
         }
         //private void LoadMoviesToDataGrid()
@@ -692,13 +688,16 @@ namespace Medias
             var editMovieWindow = new AddMovie(selectedMovie);
             editMovieWindow.ShowDialog();
 
-            if (editMovieWindow.SaveClicked)
+            Movie editedMovie = null;
+            //if (editMovieWindow.SaveClicked)
+            if (editMovieWindow.NewMovie is not null)
             {
-                MessageBox.Show("Save clicked", "EditMovieItem method");
-                MediaItem editedMovie = editMovieWindow.NewMovie;
+                 editedMovie = editMovieWindow.NewMovie;
 
                 controller.EditMovie(editedMovie);
             }
+
+           // MessageBox.Show(editedMovie?.ToString(), "private void MainWindow.xaml.cs.EditMovieItem(MediaItem selectedItem)");
 
             LoadMoviesToDataGrid();
 
@@ -753,16 +752,6 @@ namespace Medias
 
         private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.Key == Key.Delete)
-            //{
-            //    // Показать сообщение о подтверждении удаления
-            //    bool result = ShowConfirmationDialog("Are you sure you want to delete?");
-            //    if (result)
-            //    {
-            //        // Выполнить удаление
-            //        DeleteMediaItem();
-            //    }
-            //}
 
             DeleteMediaItem();
         }

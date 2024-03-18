@@ -8,21 +8,28 @@
         Title="Movies" 
         WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
-        
         Height="710" Width="1200"
         MinHeight="710" MinWidth="1200"
-        MaxHeight="1080" MaxWidth="1920">
+        MaxHeight="1080" MaxWidth="1920" >
+
+
+
+
 
     <Grid Margin="5">
+        <Grid.Background>
+            <ImageBrush ImageSource="/istockphoto-514456378-612x612.jpg"/>
+        </Grid.Background>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="92*"/>
-            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="85*"/>
+            <!--<ColumnDefinition Width="251*"/>-->
+            <ColumnDefinition Width="15*"/>
 
         </Grid.ColumnDefinitions>
 
         <!--Grid for first column-->
-        <Grid  Grid.Column="0" Margin="1">
+        <Grid  Grid.Column="0" Margin="1,1,1,1" >
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
@@ -57,7 +64,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    
+
                     <DataGridTemplateColumn Header="Genres" MinWidth="100" Width="220" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -102,9 +109,9 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button  Margin="0,2,4,2"  Grid.Column="0" Content="Add"  FontSize="12" Click="Add_Click"/>
-                    <Button  Margin="2,2,2,2"  Grid.Column="1" Content="Edit"  FontSize="12" Click="Edit_Click"/>
-                    <Button   Margin="4,2,0,2"  Grid.Column="2" Content="Delete" FontSize="12" Click="Delete_Click"/>
+                    <Button  Margin="0,2,4,2"  Grid.Column="0" Content="Add"  FontSize="12" Click="Add_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                    <Button  Margin="2,2,2,2"  Grid.Column="1" Content="Edit"  FontSize="12" Click="Edit_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                    <Button   Margin="4,2,0,2"  Grid.Column="2" Content="Delete" FontSize="12" Click="Delete_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
                 </Grid>
                 <!--Save/Load/Clear buttons Grid-->
@@ -115,10 +122,10 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button Margin="0,2,4,2"   Content="Save"  Grid.Column="0"  FontSize="12" Click="Save_Click"/>
-                    <Button Margin="2,2,2,2"  Content="Load" Grid.Column="1" FontSize="12" Click="Load_Click"/>
+                    <Button Margin="0,2,4,2"   Content="Save"  Grid.Column="0"  FontSize="12" Click="Save_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                    <Button Margin="2,2,2,2"  Content="Load" Grid.Column="1" FontSize="12" Click="Load_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
-                    <Button Margin="4,2,0,2"   Grid.Column="2" Content="Clear all" FontSize="12" Click="Clear_Click"/>
+                    <Button Margin="4,2,0,2"   Grid.Column="2" Content="Clear all" FontSize="12" Click="Clear_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
                 </Grid>
 
@@ -126,7 +133,7 @@
         </Grid>
 
         <!--Grid for second column-->
-        <Grid Grid.Column="1" Margin="1">
+        <Grid Grid.Column="1" Margin="1,1,1,1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="90*"/>
@@ -134,7 +141,7 @@
 
             </Grid.RowDefinitions>
 
-            <Button Click="ClearFilter_Click" Grid.Row="0" Margin="1" Content="Clear filter" FontSize="12"></Button>
+            <Button Click="ClearFilter_Click" Grid.Row="0" Margin="1" Content="Clear filter" FontSize="12" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"></Button>
             <Grid Grid.Row="1" >
                 <Grid.RowDefinitions>
                     <RowDefinition/>

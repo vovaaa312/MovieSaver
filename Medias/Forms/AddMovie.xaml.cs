@@ -40,7 +40,7 @@ namespace Medias.Forms
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
             comboStatus.SelectedItem = WatchStatus.NotSelected;
-           // Closing += AddMovie_Closing;
+            // Closing += AddMovie_Closing;
 
         }
         public AddMovie(Movie movie)
@@ -48,14 +48,48 @@ namespace Medias.Forms
             InitializeComponent();
             comboStatus.ItemsSource = Enum.GetValues(typeof(WatchStatus));
 
-            NewMovie = (Movie)movie;
 
-            txtName.Text = movie.Name;
-            txtDescription.Text = movie.Description;
+            int id = movie.Id;
+            string name = movie.Name;
+            int rating = movie.Rating;
+            string description = movie.Description;
+            List<Genre> genres = movie.Genres;
+            List<Author> authors = movie.Authors;
+            List<Actor> actors = movie.Actors;
+            WatchStatus status = movie.Status;
+            TimeSpan movieLength = movie.MovieLength;
 
-            genreController = new(movie.Genres);
-            actorController = new(movie.Actors);
-            authorController = new(movie.Authors);
+            //NewMovie = (Movie)movie;
+            NewMovie = new Movie(
+               id,
+              name,
+               rating,
+               description,
+             genres,
+              authors,
+              actors,
+               status,
+              movieLength
+               );
+
+            movieCopy = new Movie(
+                  id,
+              name,
+               rating,
+               description,
+             genres,
+              authors,
+              actors,
+               status,
+               movieLength
+               );
+
+            txtName.Text = NewMovie.Name;
+            txtDescription.Text = NewMovie.Description;
+
+            genreController = new(genres);
+            actorController = new(actors);
+            authorController = new(authors);
 
             comboStatus.SelectedItem = movie.Status;
             txtMovieLength.Text = movie.MovieLength.TotalMinutes.ToString();
@@ -66,7 +100,17 @@ namespace Medias.Forms
             LoadActorsToList();
             Closing += AddMovie_Closing;
 
-            movieCopy = movie;
+            // movieCopy.Id = movie.Id;
+
+
+            //movieCopy.Name = movie.Name;
+            //movieCopy.Description = movie.Description;
+            //movieCopy.Actors = movie.Actors;
+            //movieCopy.Genres = movie.Genres;
+            //movieCopy.Authors = movie.Authors; 
+            //movieCopy.Status = movie.Status;
+            //movieCopy.Rating = movie.Rating;
+
 
         }
         private void AddGenre_Click(object sender, RoutedEventArgs e)
@@ -208,8 +252,8 @@ namespace Medias.Forms
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            double length; 
-            double.TryParse(txtMovieLength.Text, out length); 
+            double length;
+            double.TryParse(txtMovieLength.Text, out length);
 
             string movieName = txtName.Text;
             string description = txtDescription.Text;
@@ -245,7 +289,8 @@ namespace Medias.Forms
             TimeSpan movieLengthTS = TimeSpan.FromMinutes(length);
             int rating = Int32.Parse(_rating);
 
-            NewMovie = new Movie(id, movieName, rating, description, genres, authors,actors, watchStatus, movieLengthTS);
+            NewMovie = new Movie(id, movieName, rating, description, genres, authors, actors, watchStatus, movieLengthTS);
+            MessageBox.Show($"NewMovie = {NewMovie}", "AddMovie.Save_Click");
             SaveClicked = true;
             Close();
 
@@ -347,8 +392,9 @@ namespace Medias.Forms
 
         private void AddMovie_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(!SaveClicked) NewMovie = movieCopy; 
-            //MessageBox.Show(NewMovie?.ToString());
+            //MessageBox.Show(movieCopy.ToString(), "AddMovie.xaml.cs.AddMovie_Closing") ;
+            if (SaveClicked == false) NewMovie = movieCopy;
+            SaveClicked = false;
 
         }
     }

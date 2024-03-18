@@ -20,14 +20,21 @@ namespace MovieSaver.Controller
         public MovieController(List<MediaItem> movies)
         {
 
-            if (movies is null || movies.Count == 0)
-            {
-                Movies = new List<MediaItem>();
+            //if (movies is null || movies.Count == 0)
+            //{
+            //    Movies = new List<MediaItem>();
 
-            }
-            else 
+            //}
+            //else 
+            //{
+            //    Movies = movies;
+            //    maxId = Movies.Max(movie => movie.Id);
+            //}
+
+            Movies = new List<MediaItem>();
+            if (movies is not null && movies.Any()) 
             {
-                Movies = movies;
+                Movies.AddRange(movies);
                 maxId = Movies.Max(movie => movie.Id);
             }
 

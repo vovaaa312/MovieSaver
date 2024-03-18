@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Стиль окна с фоновым изображением -->
+    <Style TargetType="{x:Type Window}" x:Key="WindowBackgroundStyle">
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="/istockphoto-1338319555-612x612.jpg"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

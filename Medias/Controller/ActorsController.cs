@@ -21,8 +21,10 @@ namespace Medias.Controller
         }
         public ActorsController(List<Actor> actors)
         {
-            if(actors is null || actors.Count ==0 ) Actors = new List<Actor>();
-            else Actors = actors;
+            Actors = new List<Actor>();
+
+            if (actors is not null && actors.Any()) Actors.AddRange(actors);
+
         }
 
         public bool IsEmpty() { return Actors.Count == 0; }
@@ -36,7 +38,7 @@ namespace Medias.Controller
 
         }
 
-        public void Delete(Actor actor) 
+        public void Delete(Actor actor)
         {
             if (!(actor is null)) Actors.Remove(actor);
             else throw new NullReferenceException($"Actor '{actor.Name}' is not exists");

@@ -11,6 +11,10 @@
         MaxHeight="200" MaxWidth="250"
         MinHeight="200" MinWidth="250"
         >
+
+    <Window.Background>
+        <ImageBrush ImageSource="/istockphoto-514456378-612x612.jpg"/>
+    </Window.Background>
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="85*"/>
@@ -31,7 +35,7 @@
             <Label   Grid.Row="2"  Content="Character name:"/>
             <TextBox VerticalAlignment="Top"  Grid.Row="3" Margin="1" x:Name="txtCharacterName"/>
         </Grid>
-        <Button Grid.Row="1" Margin="25,1,25,1" FontSize="13" Content="Save" Click="Save_Click"/>
+        <Button Grid.Row="1" Margin="25,1,25,1" FontSize="13" Content="Save" Click="Save_Click" BorderBrush="#FF9C9C9C"  Background="White"/>
 
     </Grid>
 </Window>

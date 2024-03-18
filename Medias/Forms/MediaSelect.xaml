@@ -6,6 +6,9 @@
         Height="150" Width="225"
         MinHeight="150" MinWidth="225"
         MaxHeight="150" MaxWidth="225">
+    <Window.Background>
+        <ImageBrush ImageSource="/istockphoto-514456378-612x612.jpg"/>
+    </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25*"/>
@@ -21,8 +24,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Margin="1" Height="30" Width="95" Grid.Column="0" Content="Series" Click="Series_Click"/>
-            <Button Margin="1" Height="30" Width="95" Grid.Column="1" Content="Movie"  Click="Movie_Click"  />
+            <Button Margin="1" Height="30" Width="95" Grid.Column="0" Content="Series" Click="Series_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+            <Button Margin="1" Height="30" Width="95" Grid.Column="1" Content="Movie"  Click="Movie_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"  />
 
         </Grid>
 

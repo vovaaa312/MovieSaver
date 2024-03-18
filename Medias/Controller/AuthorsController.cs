@@ -10,21 +10,18 @@ using System.Xml.Linq;
 
 namespace Medias.Controller
 {
-    public class AuthorsController 
+    public class AuthorsController
     {
         public List<Author> Authors { get; private set; }
 
         public AuthorsController(List<Author> authors)
         {
-            if (authors is null || authors.Count == 0) Authors = new List<Author>();
-
-
-            else Authors = authors;
+            Authors = new List<Author>();
+            if (authors is not null && authors.Any()) Authors.AddRange(authors);
         }
 
         public AuthorsController()
         {
-
             Authors = new List<Author>();
         }
 

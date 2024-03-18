@@ -15,9 +15,13 @@ namespace Medias.Controller
 
         public GenresCotnroller(List<Genre> genres)
         {
-            if (genres is null || genres.Count == 0) Genres = new List<Genre>();
+            Genres = new List<Genre>();
+            if (genres is not null && genres.Any()) {
+            
+                Genres.AddRange(genres);
+            }
 
-            else Genres = genres;
+            //else Genres = genres;
         }
 
         public GenresCotnroller()

@@ -11,9 +11,11 @@
         Height="350" Width="840"
         MinHeight="350" MinWidth="840"
         MaxHeight="720" MaxWidth="1280">
-
+    <Window.Background>
+        <ImageBrush ImageSource="/istockphoto-514456378-612x612.jpg"/>
+    </Window.Background>
     <Grid Margin="5">
-     
+
         <Grid.RowDefinitions>
             <RowDefinition Height="90*"/>
             <RowDefinition Height="10*"/>
@@ -49,7 +51,7 @@
                     <TextBox Grid.Row="1" Grid.Column="0" Margin="1" x:Name="txtName"/>
 
                     <Label Grid.Row="2"  Content="Status:"/>
-                    <ComboBox  Grid.Row="3"  Margin="1" x:Name="comboStatus"/>
+                    <ComboBox  Grid.Row="3"  Margin="1" x:Name="comboStatus" BorderBrush="#FF9C9C9C" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"/>
                 </Grid>
 
                 <!--Genres grid-->
@@ -89,8 +91,8 @@
                                     <ComboBoxItem>Romance</ComboBoxItem>
                                     <ComboBoxItem>Thriller</ComboBoxItem>
                                 </ComboBox>
-                                <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13"     Click="AddGenre_Click"/>
-                                <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete"  FontSize="13"    Click="DeleteGenre_Click"/>
+                                <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13"     Click="AddGenre_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                                <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete"  FontSize="13"    Click="DeleteGenre_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
                             </Grid>
                         </Grid>
@@ -99,7 +101,7 @@
                 </Grid>
 
             </Grid>
-            
+
             <!--Grid for second column-->
             <Grid Grid.Column="1" Margin="1">
                 <Grid.RowDefinitions>
@@ -150,8 +152,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <TextBox Grid.Row="0" Margin="0,0,0,10"  x:Name="AuthorNameTextBox"  ></TextBox>
-                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddAuthor_Click"/>
-                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteAuthor_Click"/>
+                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddAuthor_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteAuthor_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
                         </Grid>
                     </Grid>
@@ -208,17 +210,17 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddActor_Click"/>
-                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteActor_Click"/>
+                            <Button Grid.Row="1" Margin="0,5,0,5" Content="Add"  FontSize="13" Click="AddActor_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            <Button Grid.Row="2" Margin="0,10,0,0" Content="Delete" FontSize="13"  Click="DeleteActor_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-        
+
         </Grid>
-        
-        <Button Grid.Row="1" Margin="100,1,100,1" FontSize="13" Content="Save" Click="Save_Click"/>
+
+        <Button Grid.Row="1" Margin="100,1,100,1" FontSize="13" Content="Save" Click="Save_Click" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
 
     </Grid>
 </Window>
