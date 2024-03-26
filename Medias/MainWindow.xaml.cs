@@ -31,7 +31,7 @@ namespace Medias
 
         public MainWindow()
         {
-            this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+           // this.PreviewKeyDown += MainWindow_PreviewKeyDown;
 
             controller = new MovieController();
 
